@@ -1,0 +1,715 @@
+<!doctype html>
+
+
+
+  
+
+
+<html class="theme-next mist use-motion">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+  <link href="/vendors/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css"/>
+
+
+
+
+  <link href="//fonts.googleapis.com/css?family=Lato:300,400,700,400italic&subset=latin,latin-ext" rel="stylesheet" type="text/css">
+
+
+
+<link href="/vendors/font-awesome/css/font-awesome.min.css?v=4.4.0" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=0.5.0" rel="stylesheet" type="text/css" />
+
+
+  <meta name="keywords" content="C++/C,WINDOWSAPI,串口," />
+
+
+
+
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=0.5.0" />
+
+
+
+
+
+
+<meta name="description" content="在Win32下，可以使用两种编程方式实现串口通信，其一是使用ActiveX控件，这种方法程序简单，但欠灵活。其二是调用Windows的API函数，这种方法可以清楚地掌握串口通信的机制，并且自由灵活。因为实验室机器不通外网不方便使用ActiveX控件，因此使用windows都带有的API串口通信方式。　　串口的操作可以有两种操作方式：同步操作方式和重叠操作方式（又称为异步操作方式）。同步操作时，AP">
+<meta property="og:type" content="article">
+<meta property="og:title" content="利用WINDOWS API函数编写串口程序">
+<meta property="og:url" content="http://yoursite.com/2016/利用WINDOWS-API函数编写串口程序/index.html">
+<meta property="og:site_name" content="Mr.Zhang's Coding Life">
+<meta property="og:description" content="在Win32下，可以使用两种编程方式实现串口通信，其一是使用ActiveX控件，这种方法程序简单，但欠灵活。其二是调用Windows的API函数，这种方法可以清楚地掌握串口通信的机制，并且自由灵活。因为实验室机器不通外网不方便使用ActiveX控件，因此使用windows都带有的API串口通信方式。　　串口的操作可以有两种操作方式：同步操作方式和重叠操作方式（又称为异步操作方式）。同步操作时，AP">
+<meta property="og:updated_time" content="2016-03-01T13:09:42.316Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="利用WINDOWS API函数编写串口程序">
+<meta name="twitter:description" content="在Win32下，可以使用两种编程方式实现串口通信，其一是使用ActiveX控件，这种方法程序简单，但欠灵活。其二是调用Windows的API函数，这种方法可以清楚地掌握串口通信的机制，并且自由灵活。因为实验室机器不通外网不方便使用ActiveX控件，因此使用windows都带有的API串口通信方式。　　串口的操作可以有两种操作方式：同步操作方式和重叠操作方式（又称为异步操作方式）。同步操作时，AP">
+
+
+
+<script type="text/javascript" id="hexo.configuration">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    scheme: 'Mist',
+    sidebar: {"position":"left","display":"post"},
+    fancybox: true,
+    motion: true,
+    duoshuo: {
+      userId: 0,
+      author: '博主'
+    }
+  };
+</script>
+
+  <title> 利用WINDOWS API函数编写串口程序 | Mr.Zhang's Coding Life </title>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+
+
+
+
+
+
+
+
+  
+  
+    
+  
+
+  <div class="container one-collumn sidebar-position-left page-post-detail ">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-meta ">
+  
+
+  <div class="custom-logo-site-title">
+    <a href="/"  class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <span class="site-title">Mr.Zhang's Coding Life</span>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+  </div>
+  <p class="site-subtitle">张先生的成长日记</p>
+</div>
+
+<div class="site-nav-toggle">
+  <button>
+    <span class="btn-bar"></span>
+    <span class="btn-bar"></span>
+    <span class="btn-bar"></span>
+  </button>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu ">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-home fa-fw"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories" rel="section">
+            
+              <i class="menu-item-icon fa fa-th fa-fw"></i> <br />
+            
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives" rel="section">
+            
+              <i class="menu-item-icon fa fa-archive fa-fw"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags" rel="section">
+            
+              <i class="menu-item-icon fa fa-tags fa-fw"></i> <br />
+            
+            标签
+          </a>
+        </li>
+      
+
+      
+      
+      
+    </ul>
+  
+
+  
+</nav>
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                利用WINDOWS API函数编写串口程序
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            <span class="post-meta-item-icon">
+              <i class="fa fa-calendar-o"></i>
+            </span>
+            <span class="post-meta-item-text">发表于</span>
+            <time itemprop="dateCreated" datetime="2016-03-01T20:18:33+08:00" content="2016-03-01">
+              2016-03-01
+            </time>
+          </span>
+
+          
+            <span class="post-category" >
+              &nbsp; | &nbsp;
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+              
+                <span itemprop="about" itemscope itemtype="https://schema.org/Thing">
+                  <a href="/source/categories/C-C/" itemprop="url" rel="index">
+                    <span itemprop="name">C++/C</span>
+                  </a>
+                </span>
+
+                
+                
+
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+
+          
+          
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <p>　　在Win32下，可以使用两种编程方式实现串口通信，其一是使用ActiveX控件，这种方法程序简单，但欠灵活。其二是调用Windows的API函数，这种方法可以清楚地掌握串口通信的机制，并且自由灵活。因为实验室机器不通外网不方便使用ActiveX控件，因此使用windows都带有的API串口通信方式。<br>　　串口的操作可以有两种操作方式：同步操作方式和重叠操作方式（又称为异步操作方式）。同步操作时，API函数会阻塞直到操作完成以后才能返回（在多线程方式中，虽然不会阻塞主线程，但是仍然会阻塞监听线程）；而重叠操作方式，API函数会立即返回，操作在后台进行，避免线程的阻塞。 本程序中因为发送串口数据后需要等待其返回数据，因此采用同步操作方式即阻塞模式。<br>　　无论那种操作方式，一般都通过四个步骤来完成：<br>　　1. 打开串口<br>　　2. 配置串口<br>　　3. 读写串口<br>　　4. 关闭串口  </p>
+<h2 id="打开串口">打开串口</h2><p>　　Win32系统把文件的概念进行了扩展。无论是文件、通信设备、命名管道、邮件槽、磁盘、还是控制台，都是用API函数CreateFile来打开或创建的。该函数的原型为：<br><figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="function">HANDLE <span class="title">CreateFile</span><span class="params">(</span><br><span class="line">		LPCTSTR lpFileName,		<span class="comment">//将要打开的串口逻辑名，如“COM1” </span></span><br><span class="line">		DWORD dwDesiredAccess, 	<span class="comment">//指定串口访问的类型，可以是读取、写入或二者并列 </span></span><br><span class="line">		DWORD dwShareMode,		<span class="comment">//指定共享属性，由于串口不能共享，该参数必须置为0</span></span><br><span class="line">		LPSECURITY_ATTRIBUTES lpSecurityAttributes,<span class="comment">//引用安全性属性结构，缺省值为NULL</span></span><br><span class="line">		DWORD dwCreationDistribution,<span class="comment">//创建标志，对串口操作该参数必须置为OPEN_EXISTING</span></span><br><span class="line">		DWORD dwFlagsAndAttributes,<span class="comment">//属性描述，用于指定该串口是否进行异步操作，该值为FILE_FLAG_OVERLAPPED，表示使用异步的I/O；该值为0，表示同步I/O操作</span></span><br><span class="line">		HANDLE hTemplateFile)</span></span>;<span class="comment">//对串口而言该参数必须置为NULL</span></span><br></pre></td></tr></table></figure></p>
+<p>　　这里注意lpFileName如果使用C语言的话可以直接使用“COM1” ，如果使用C++&amp;VS2010的话不能直接使用“COM1” ，而应该使用L“COM1”或者_T（“COM1” ）来转换为LPCTSTR格式。</p>
+<h2 id="配置串口">配置串口</h2><h3 id="DCB结构">DCB结构</h3><p>　　在打开通讯设备句柄后，常常需要对串口进行一些初始化配置工作。这需要通过一个DCB结构来进行。DCB结构包含了诸如波特率、数据位数、奇偶校验和停止位数等信息。在查询或配置串口的属性时，都要用DCB结构来作为缓冲区。<br>　　一般用CreateFile打开串口后，可以调用GetCommState函数来获取串口的初始配置。要修改串口的配置，应该先修改DCB结构，然后再调用SetCommState函数设置串口。<br>　　DCB结构包含了串口的各项参数设置，下面仅介绍几个该结构常用的变量：<br><figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">typedef</span> <span class="keyword">struct</span> _DCB&#123;</span><br><span class="line">	DWORD BaudRate;<span class="comment">//波特率，指定通信设备的传输速率。这个成员可以是实际波特率值或者下面的常量值之一：</span></span><br><span class="line">	DWORD fParity; <span class="comment">// 指定奇偶校验使能。若此成员为1，允许奇偶校验检查</span></span><br><span class="line">	<span class="comment">//…</span></span><br><span class="line">	BYTE ByteSize; <span class="comment">// 通信字节位数，4—8</span></span><br><span class="line">	BYTE Parity;   <span class="comment">//指定奇偶校验方法。此成员可以有下列值：EVENPARITY  偶校验     NOPARITY 无校验 MARKPARITY  标记校验   ODDPARITY 奇校验</span></span><br><span class="line">	BYTE StopBits;  <span class="comment">//指定停止位的位数。此成员可以有下列值：ONESTOPBIT   1位停止位   ONE5STOPBITS   1.5位停止位TWOSTOPBITS  2位停止位</span></span><br><span class="line">	<span class="comment">//………</span></span><br><span class="line">&#125; DCB;</span><br></pre></td></tr></table></figure></p>
+<p>　　除了在BCD中的设置外，程序一般还需要设置I/O缓冲区的大小和超时。Windows用I/O缓冲区来暂存串口输入和输出的数据。如果通信的速率较高，则应该设置较大的缓冲区。调用SetupComm函数可以设置串行口的输入和输出缓冲区的大小。<br><figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="function">BOOL <span class="title">SetupComm</span><span class="params">(</span><br><span class="line">	HANDLE hFile, <span class="comment">// 通信设备的句柄</span></span><br><span class="line">	DWORD dwInQueue,      <span class="comment">// 输入缓冲区的大小（字节数）</span></span><br><span class="line">	DWORD dwOutQueue    <span class="comment">// 输出缓冲区的大小（字节数）</span></span><br><span class="line">)</span></span>;</span><br></pre></td></tr></table></figure></p>
+<h3 id="TIMEOUT结构">TIMEOUT结构</h3><p>　　在用ReadFile和WriteFile读写串行口时，需要考虑超时问题。超时的作用是在指定的时间内没有读入或发送指定数量的字符，ReadFile或WriteFile的操作仍然会结束。<br>　　要查询当前的超时设置应调用GetCommTimeouts函数，该函数会填充一个COMMTIMEOUTS结构。调用SetCommTimeouts可以用某一个COMMTIMEOUTS结构的内容来设置超时。<br>　　读写串口的超时有两种：间隔超时和总超时。间隔超时是指在接收时两个字符之间的最大时延。总超时是指读写操作总共花费的最大时间。写操作只支持总超时，而读操作两种超时均支持。用COMMTIMEOUTS结构可以规定读写操作的超时。<br>　　COMMTIMEOUTS结构的定义为：<br><figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">typedef</span> <span class="keyword">struct</span> _COMMTIMEOUTS &#123;         </span><br><span class="line">	DWORD ReadIntervalTimeout; <span class="comment">//读间隔超时</span></span><br><span class="line">	DWORD ReadTotalTimeoutMultiplier; <span class="comment">//读时间系数</span></span><br><span class="line">	DWORD ReadTotalTimeoutConstant; <span class="comment">//读时间常量</span></span><br><span class="line">	DWORD WriteTotalTimeoutMultiplier; <span class="comment">// 写时间系数</span></span><br><span class="line">	DWORD WriteTotalTimeoutConstant; <span class="comment">//写时间常量</span></span><br><span class="line">&#125; COMMTIMEOUTS,*LPCOMMTIMEOUTS;</span><br></pre></td></tr></table></figure></p>
+<p>　　COMMTIMEOUTS结构的成员都以毫秒为单位。总超时的计算公式是：<br>　　　　总超时＝时间系数×要求读/写的字符数＋时间常量  </p>
+<h2 id="读写串口">读写串口</h2><h3 id="读串口操作">读串口操作</h3><p>　　程序可以使用Win32API ReadFile()函数或者ReadFileEx()函数从串口中读取数据。ReadFile()函数对同步或异步操作都支持，而ReadFileEx()只支持异步操作。这两个函数都受到函数是否异步操作、超时操作等有关参数的影响和限定。<br>　　ReadFile()函数声明如下：<br><figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="function">BOOL <span class="title">ReadFile</span><span class="params">(</span><br><span class="line">	HANDLE hFile,      <span class="comment">// 指向标识的句柄</span></span><br><span class="line">	LPVOID lpBuffer,    <span class="comment">// 指向一个缓冲区</span></span><br><span class="line">	DWORD nNumberOfBytesToRead, <span class="comment">// 读取的字节数</span></span><br><span class="line">	LPDWORD lpNumberOfBytesRead, <span class="comment">// 指向调用该函数读出的字节数</span></span><br><span class="line">	LPOVERLAPPED lpOverlapped   <span class="comment">// 一个OVERLAPPED的结构</span></span><br><span class="line">)</span></span>;</span><br></pre></td></tr></table></figure></p>
+<p>　　其中主要参数介绍如下：</p>
+<ul>
+<li>hFile：指向标识的句柄。对串口来说，就是由CreateFile函数返回的句柄。该句柄必须拥有GENERIC_READ的权限。</li>
+<li>lpBuffer：指向一个缓冲区，该缓冲区主要用来存放从串口设备中读取的数据。</li>
+<li>nNumberOfBytesToRead：指定要从串口设备读取的字节数。</li>
+<li>lpNumberOfBytesRead：指向调用该函数读出的字节数。ReadFile()在读操作前，首先将其设置为0。Windows NT/2000中当lpOverlapped没有设置时，lpNumberOfBytesRead必须设置。当lpOverlapped设置时，lpNumberOfBytesRead可以不设置。这是可以调用GetOverlappedResult()函数获取实际的读取数值。Windows 9x中这个参数一定要设置。</li>
+<li>lpOverlapped：是一个OVERLAPPED的结构，该结构将在后面介绍。如果hFile以FILE_FLAG_OVERLAPPED方式常见，则需要此结构；否则，不需要此结构。</li>
+</ul>
+<p>　　需要注意的是如果该函数因为超时而返回，那么返回值是TRUE。参数lpOverlapped 在操作时应该指向一个OVERLAPPED的结构，如果该参数为NULL ，那么函数将进行同步操作，而不管句柄是否是由 FILE_FLAG_OVERLAPPED 标志建立的。当ReadFile 返回FALSE时，不一定就是操作失败，线程应该调用GetLastError函数分析返回的结果。例如，在重叠操作时如果操作还未完成函数返回，那么函数就返回FALSE，而且GetLastError函数返回ERROR_IO_PENDING。</p>
+<h3 id="写串口操作">写串口操作</h3><p>　　可以使用Win32API函数WriteFile() 或者WriteFileEx()向串口中写数据。WriteFile()函数对同步或异步操作都支持，而WriteFileEx()只支持异步操作。这两个函数都受到函数是否异步操作、超时操作等有关参数的影响和限定。<br>　　WriteFile()函数声明如下：<br><figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="function">BOOL <span class="title">WriteFile</span><span class="params">(</span><br><span class="line">	HANDLE hFile,      <span class="comment">// 指向标识的句柄</span></span><br><span class="line">	LPCVOID lpBuffer,    <span class="comment">// 指向一个缓冲区</span></span><br><span class="line">	DWORD nNumberOfBytesToWrite, <span class="comment">// 指定要向串口设备写入的字节数</span></span><br><span class="line">	LPDWORD lpNumberOfBytesWritten, <span class="comment">// 指向调用该函数已写入的字节数</span></span><br><span class="line">	LPOVERLAPPED lpOverlapped   <span class="comment">// 一个OVERLAPPED的结构</span></span><br><span class="line">)</span></span>;</span><br></pre></td></tr></table></figure></p>
+<p>　　其中主要参数介绍如下：</p>
+<ul>
+<li>hFile：指向标识的句柄。对串口来说，就是由CreateFile函数返回的句柄。该句柄必须拥有GENERIC_WRITE的权限。</li>
+<li>lpBuffer：指向一个缓冲区，该缓冲区主要用来存放待写入串口设备的数据。</li>
+<li>nNumberOfBytesToWrite：指定要向串口设备写入的字节数。</li>
+<li>lpNumberOfBytesWritten：指向调用该函数已写入的字节数。WriteFile()在写操作前，首先将其设置为0。Windows NT/2000中当lpOverlapped没有设置时，lpNumberOfBytesWritten必须设置。当lpOverlapped设置时，lpNumberOfBytesWritten可以不设置。这是可以调用GetOverlappedResult()函数获取实际的读取数值。Windows 9x中这个参数一定要设置。</li>
+<li>lpOverlapped：是一个OVERLAPPED的结构，该结构将在后面介绍。如果hFile以FILE_FLAG_OVERLAPPED方式常见，则需要此结构；否则，不需要此结构。</li>
+</ul>
+<p>　　如果函数调用成功，则返回值不为零；若函数调用失败，则返回值为零。调用GetLastError()函数可以获得进一步的出错信息。  </p>
+<h2 id="关闭串口">关闭串口</h2><p>　　关闭串口比打开串口简单得多，只需要调用CloseHandle()函数关闭由CreateHandle()函数返回得句柄即可。<br>　　CloseHandle函数声明如下：<br><figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="function">BOOL <span class="title">CloseHandle</span><span class="params">(</span><br><span class="line">  HANDLE hObject   <span class="comment">// 需关闭的设备句柄</span></span><br><span class="line">)</span></span>;</span><br></pre></td></tr></table></figure></p>
+<p>　　使用串口时一般要关闭它，如果忘记关闭串口，串口就会始终处于打开状态，其它应用程序就不能打开并使用串口了。</p>
+<h2 id="示例代码">示例代码</h2><p>　　最后贴出全过程的示例代码：<br>    <figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br></pre></td><td class="code"><pre><span class="line"><span class="preprocessor">#<span class="keyword">include</span> <span class="string">&lt;stdio.h&gt;</span></span></span><br><span class="line"><span class="preprocessor">#<span class="keyword">include</span> <span class="string">&lt;string.h&gt;</span></span></span><br><span class="line"><span class="preprocessor">#<span class="keyword">include</span> <span class="string">&lt;stdlib.h&gt;</span></span></span><br><span class="line"><span class="preprocessor">#<span class="keyword">include</span> <span class="string">&lt;conio.h&gt;</span></span></span><br><span class="line"><span class="preprocessor">#<span class="keyword">include</span> <span class="string">&lt;windows.h&gt;</span></span></span><br><span class="line"><span class="preprocessor">#<span class="keyword">include</span> <span class="string">&lt;winnt.h&gt;</span></span></span><br><span class="line"></span><br><span class="line"><span class="preprocessor">#<span class="keyword">define</span> BAUD_RATE <span class="number">9600</span></span></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">main</span><span class="params">()</span></span><br><span class="line"></span>&#123;</span><br><span class="line">    HANDLE hCom;</span><br><span class="line">    <span class="comment">//unsigned char buf[128];</span></span><br><span class="line">    <span class="keyword">char</span> inputData[<span class="number">1024</span>]=<span class="string">"nihao"</span>;</span><br><span class="line">    <span class="keyword">char</span> outputData[<span class="number">1024</span>];</span><br><span class="line">    <span class="keyword">int</span> sizeBuffer = <span class="number">6</span>;</span><br><span class="line">    <span class="keyword">int</span> length;</span><br><span class="line">    COMMTIMEOUTS TimeOuts; <span class="comment">/*定义超时变量*/</span></span><br><span class="line">    DCB dcb;<span class="comment">/*串口DCB设置*/</span></span><br><span class="line"></span><br><span class="line">    <span class="comment">/*打开串口文件*/</span></span><br><span class="line">    hCom = CreateFile(<span class="string">"COM4"</span>,GENERIC_READ|GENERIC_WRITE,<span class="number">0</span>,<span class="literal">NULL</span>,OPEN_EXISTING,<span class="number">0</span>,<span class="literal">NULL</span>);</span><br><span class="line">   </span><br><span class="line"></span><br><span class="line">    <span class="comment">/*强制类型转换-1为HANDLE类型*/</span></span><br><span class="line">    <span class="keyword">if</span>(hCom == (HANDLE)-<span class="number">1</span>)</span><br><span class="line">    &#123;</span><br><span class="line">        <span class="built_in">printf</span>(<span class="string">"open COM failed\n"</span>);</span><br><span class="line">        <span class="built_in">exit</span>(<span class="number">1</span>);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">/* 超时设置 */</span></span><br><span class="line">    TimeOuts.ReadIntervalTimeout=<span class="number">1000</span>;</span><br><span class="line">    TimeOuts.ReadTotalTimeoutMultiplier=<span class="number">500</span>;</span><br><span class="line">    TimeOuts.ReadTotalTimeoutConstant=<span class="number">5000</span>;</span><br><span class="line">    TimeOuts.WriteTotalTimeoutMultiplier=<span class="number">500</span>;</span><br><span class="line">    TimeOuts.WriteTotalTimeoutConstant=<span class="number">2000</span>;</span><br><span class="line"></span><br><span class="line">    <span class="comment">/* 写入串口超时参数,出错返回0*/</span></span><br><span class="line">    <span class="keyword">if</span>(!SetCommTimeouts(hCom,&amp;TimeOuts))</span><br><span class="line">    &#123;</span><br><span class="line">        <span class="built_in">printf</span>(<span class="string">"写入超时参数错误"</span>);</span><br><span class="line">        <span class="built_in">exit</span>(<span class="number">1</span>);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">/* 设置输入输出缓冲区参数，返回非0表示成功 */</span></span><br><span class="line">    <span class="keyword">if</span>(!SetupComm(hCom,<span class="number">1024</span>,<span class="number">1024</span>))</span><br><span class="line">    &#123;</span><br><span class="line">        <span class="built_in">printf</span>(<span class="string">"设置串口读写缓冲区失败\n"</span>);</span><br><span class="line">        <span class="built_in">exit</span>(<span class="number">1</span>);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">/* 获取当前串口状态信息(只需要修改部分串口信息),调用失败返回0*/</span></span><br><span class="line">    <span class="keyword">if</span>(!GetCommState(hCom,&amp;dcb))</span><br><span class="line">    &#123;</span><br><span class="line">        <span class="built_in">printf</span>(<span class="string">"获取串口属性失败\n"</span>);</span><br><span class="line">        <span class="built_in">exit</span>(<span class="number">1</span>);</span><br><span class="line">    &#125;</span><br><span class="line">   </span><br><span class="line"></span><br><span class="line">    <span class="comment">/*具体情况，具体对待*/</span></span><br><span class="line">    dcb.BaudRate = BAUD_RATE;</span><br><span class="line">    dcb.ByteSize = <span class="number">8</span>;</span><br><span class="line">    dcb.Parity = NOPARITY;    <span class="comment">/*无校验*/</span></span><br><span class="line">    dcb.StopBits=ONESTOPBIT; <span class="comment">/*1位停止位*/</span></span><br><span class="line"></span><br><span class="line">    <span class="keyword">if</span>(!SetCommState(hCom,&amp;dcb))</span><br><span class="line">    &#123;</span><br><span class="line">        <span class="built_in">printf</span>(<span class="string">"设置串口参数出错\n"</span>);</span><br><span class="line">        <span class="built_in">exit</span>(<span class="number">1</span>);</span><br><span class="line">    &#125;</span><br><span class="line"> </span><br><span class="line"></span><br><span class="line">    <span class="keyword">if</span>(WriteFile(hCom,outputData,sizeBuffer,&amp;length,<span class="literal">NULL</span>)==<span class="number">0</span>)</span><br><span class="line">    &#123;</span><br><span class="line">        <span class="built_in">printf</span>(<span class="string">"写入串口数据失败\n"</span>);</span><br><span class="line">        <span class="built_in">exit</span>(<span class="number">1</span>);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">if</span>(ReadFile(hCom,inputData,sizeBuffer,&amp;length,<span class="literal">NULL</span>)==<span class="number">0</span>)</span><br><span class="line">    &#123;</span><br><span class="line">        <span class="built_in">printf</span>(<span class="string">"读取串口数据失败\n"</span>);</span><br><span class="line">        <span class="built_in">exit</span>(<span class="number">1</span>);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">/*关闭串口*/</span></span><br><span class="line">    CloseHandle(hCom);</span><br><span class="line">   </span><br><span class="line"></span><br><span class="line">    <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+
+      
+    </div>
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/source/tags/C-C/" rel="tag">#C++/C</a>
+          
+            <a href="/source/tags/WINDOWSAPI/" rel="tag">#WINDOWSAPI</a>
+          
+            <a href="/source/tags/串口/" rel="tag">#串口</a>
+          
+        </div>
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2016/TEST-MY-ARCHIVES/" rel="next" title="TEST MY ARCHIVES">
+                <i class="fa fa-chevron-left"></i> TEST MY ARCHIVES
+              </a>
+            
+          </div>
+
+          <div class="post-nav-prev post-nav-item">
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+  <div class="comments" id="comments">
+    
+  </div>
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview sidebar-panel ">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+          <img class="site-author-image" itemprop="image"
+               src="/images/avatar.jpg"
+               alt="Mr.Zhang" />
+          <p class="site-author-name" itemprop="name">Mr.Zhang</p>
+          <p class="site-description motion-element" itemprop="description">伟大的工作，并不是用力量而是用耐心去完成的。 —— 约翰逊</p>
+        </div>
+        <nav class="site-state motion-element">
+          <div class="site-state-item site-state-posts">
+            <a href="/archives">
+              <span class="site-state-item-count">4</span>
+              <span class="site-state-item-name">日志</span>
+            </a>
+          </div>
+          
+          
+            <div class="site-state-item site-state-categories">
+              <a href="/categories">
+                <span class="site-state-item-count">2</span>
+                <span class="site-state-item-name">分类</span>
+              </a>
+            </div>
+          
+
+          
+            <div class="site-state-item site-state-tags">
+              <a href="/tags">
+                <span class="site-state-item-count">4</span>
+                <span class="site-state-item-name">标签</span>
+              </a>
+            </div>
+          
+
+        </nav>
+
+        
+
+        <div class="links-of-author motion-element">
+          
+        </div>
+
+        
+        
+
+        <div class="links-of-author motion-element">
+          
+        </div>
+
+      </section>
+
+      
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc-indicator-top post-toc-indicator">
+            <i class="fa fa-angle-double-up"></i>
+          </div>
+          <div class="post-toc">
+            
+              
+            
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#打开串口"><span class="nav-number">1.</span> <span class="nav-text">打开串口</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#配置串口"><span class="nav-number">2.</span> <span class="nav-text">配置串口</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#DCB结构"><span class="nav-number">2.1.</span> <span class="nav-text">DCB结构</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#TIMEOUT结构"><span class="nav-number">2.2.</span> <span class="nav-text">TIMEOUT结构</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#读写串口"><span class="nav-number">3.</span> <span class="nav-text">读写串口</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#读串口操作"><span class="nav-number">3.1.</span> <span class="nav-text">读串口操作</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#写串口操作"><span class="nav-number">3.2.</span> <span class="nav-text">写串口操作</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#关闭串口"><span class="nav-number">4.</span> <span class="nav-text">关闭串口</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#示例代码"><span class="nav-number">5.</span> <span class="nav-text">示例代码</span></a></li></ol></div>
+            
+          </div>
+          <div class="post-toc-indicator-bottom post-toc-indicator">
+            <i class="fa fa-angle-double-down"></i>
+          </div>
+        </section>
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright" >
+  
+  &copy; 
+  <span itemprop="copyrightYear">2016</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Mr.Zhang</span>
+</div>
+
+<div class="powered-by">
+  由 <a class="theme-link" href="http://hexo.io">Hexo</a> 强力驱动
+</div>
+
+<div class="theme-info">
+  主题 -
+  <a class="theme-link" href="https://github.com/iissnan/hexo-theme-next">
+    NexT.Mist
+  </a>
+</div>
+
+
+
+      </div>
+    </footer>
+
+    <div class="back-to-top"></div>
+  </div>
+
+  
+
+
+  
+
+
+
+  <script type="text/javascript" src="/vendors/jquery/index.js?v=2.1.3"></script>
+
+  <script type="text/javascript" src="/vendors/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+
+  <script type="text/javascript" src="/vendors/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+
+  <script type="text/javascript" src="/vendors/velocity/velocity.min.js"></script>
+
+  <script type="text/javascript" src="/vendors/velocity/velocity.ui.min.js"></script>
+
+  <script type="text/javascript" src="/vendors/fancybox/source/jquery.fancybox.pack.js"></script>
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=0.5.0"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=0.5.0"></script>
+
+
+
+  
+  
+
+  
+  
+<script type="text/javascript" src="/js/src/scrollspy.js?v=0.5.0"></script>
+
+<script type="text/javascript" id="sidebar.toc.highlight">
+  $(document).ready(function () {
+    var tocSelector = '.post-toc';
+    var $tocSelector = $(tocSelector);
+    var activeCurrentSelector = '.active-current';
+
+    $tocSelector
+      .on('activate.bs.scrollspy', function () {
+        var $currentActiveElement = $(tocSelector + ' .active').last();
+
+        removeCurrentActiveClass();
+        $currentActiveElement.addClass('active-current');
+
+        $tocSelector[0].scrollTop = $currentActiveElement.position().top;
+      })
+      .on('clear.bs.scrollspy', function () {
+        removeCurrentActiveClass();
+      });
+
+    function removeCurrentActiveClass () {
+      $(tocSelector + ' ' + activeCurrentSelector)
+        .removeClass(activeCurrentSelector.substring(1));
+    }
+
+    function processTOC () {
+      getTOCMaxHeight();
+      toggleTOCOverflowIndicators();
+    }
+
+    function getTOCMaxHeight () {
+      var height = $('.sidebar').height() -
+                   $tocSelector.position().top -
+                   $('.post-toc-indicator-bottom').height();
+
+      $tocSelector.css('height', height);
+
+      return height;
+    }
+
+    function toggleTOCOverflowIndicators () {
+      tocOverflowIndicator(
+        '.post-toc-indicator-top',
+        $tocSelector.scrollTop() > 0 ? 'show' : 'hide'
+      );
+
+      tocOverflowIndicator(
+        '.post-toc-indicator-bottom',
+        $tocSelector.scrollTop() >= $tocSelector.find('ol').height() - $tocSelector.height() ? 'hide' : 'show'
+      )
+    }
+
+    $(document).on('sidebar.motion.complete', function () {
+      processTOC();
+    });
+
+    $('body').scrollspy({ target: tocSelector });
+    $(window).on('resize', function () {
+      if ( $('.sidebar').hasClass('sidebar-active') ) {
+        processTOC();
+      }
+    });
+
+    onScroll($tocSelector);
+
+    function onScroll (element) {
+      element.on('mousewheel DOMMouseScroll', function (event) {
+          var oe = event.originalEvent;
+          var delta = oe.wheelDelta || -oe.detail;
+
+          this.scrollTop += ( delta < 0 ? 1 : -1 ) * 30;
+          event.preventDefault();
+
+          toggleTOCOverflowIndicators();
+      });
+    }
+
+    function tocOverflowIndicator (indicator, action) {
+      var $indicator = $(indicator);
+      var opacity = action === 'show' ? 1 : 0;
+      $indicator.velocity ?
+        $indicator.velocity('stop').velocity({
+          opacity: opacity
+        }, { duration: 100 }) :
+        $indicator.stop().animate({
+          opacity: opacity
+        }, 100);
+    }
+
+  });
+</script>
+
+<script type="text/javascript" id="sidebar.nav">
+  $(document).ready(function () {
+    var html = $('html');
+    var TAB_ANIMATE_DURATION = 200;
+    var hasVelocity = $.isFunction(html.velocity);
+
+    $('.sidebar-nav li').on('click', function () {
+      var item = $(this);
+      var activeTabClassName = 'sidebar-nav-active';
+      var activePanelClassName = 'sidebar-panel-active';
+      if (item.hasClass(activeTabClassName)) {
+        return;
+      }
+
+      var currentTarget = $('.' + activePanelClassName);
+      var target = $('.' + item.data('target'));
+
+      hasVelocity ?
+        currentTarget.velocity('transition.slideUpOut', TAB_ANIMATE_DURATION, function () {
+          target
+            .velocity('stop')
+            .velocity('transition.slideDownIn', TAB_ANIMATE_DURATION)
+            .addClass(activePanelClassName);
+        }) :
+        currentTarget.animate({ opacity: 0 }, TAB_ANIMATE_DURATION, function () {
+          currentTarget.hide();
+          target
+            .stop()
+            .css({'opacity': 0, 'display': 'block'})
+            .animate({ opacity: 1 }, TAB_ANIMATE_DURATION, function () {
+              currentTarget.removeClass(activePanelClassName);
+              target.addClass(activePanelClassName);
+            });
+        });
+
+      item.siblings().removeClass(activeTabClassName);
+      item.addClass(activeTabClassName);
+    });
+
+    $('.post-toc a').on('click', function (e) {
+      e.preventDefault();
+      var targetSelector = NexT.utils.escapeSelector(this.getAttribute('href'));
+      var offset = $(targetSelector).offset().top;
+      hasVelocity ?
+        html.velocity('stop').velocity('scroll', {
+          offset: offset  + 'px',
+          mobileHA: false
+        }) :
+        $('html, body').stop().animate({
+          scrollTop: offset
+        }, 500);
+    });
+
+    // Expand sidebar on post detail page by default, when post has a toc.
+    NexT.motion.middleWares.sidebar = function () {
+      var $tocContent = $('.post-toc-content');
+
+      if (CONFIG.sidebar.display === 'post' || CONFIG.sidebar.display === 'always') {
+        if ($tocContent.length > 0 && $tocContent.html().trim().length > 0) {
+          NexT.utils.displaySidebar();
+        }
+      }
+    };
+  });
+</script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=0.5.0"></script>
+
+
+
+  
+
+
+
+  
+
+
+
+  
+  
+
+  
+  
+
+
+</body>
+</html>

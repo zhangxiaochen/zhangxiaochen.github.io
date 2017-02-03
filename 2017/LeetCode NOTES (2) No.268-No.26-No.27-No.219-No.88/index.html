@@ -1,0 +1,767 @@
+<!doctype html>
+
+
+
+  
+
+
+<html class="theme-next mist use-motion">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+  <link href="/vendors/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css"/>
+
+
+
+
+  <link href="//fonts.googleapis.com/css?family=Lato:300,400,700,400italic&subset=latin,latin-ext" rel="stylesheet" type="text/css">
+
+
+
+<link href="/vendors/font-awesome/css/font-awesome.min.css?v=4.4.0" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=0.5.0" rel="stylesheet" type="text/css" />
+
+
+  <meta name="keywords" content="Array,C++/C,LeetCode," />
+
+
+
+
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=0.5.0" />
+
+
+
+
+
+
+<meta name="description" content="今天第二天做LeetCode，争取每天做3~15道左右，锻炼一下自己的算法能力以及编程的严谨能力。　　1. Missing Number-268　　2. Remove Duplicates from Sorted Array-26　　3. Remove Element-27　　4. Contains Duplicate II-219　　5. Merge Sorted Array-88
+Missin">
+<meta property="og:type" content="article">
+<meta property="og:title" content="LeetCode NOTES (2) No.268-No.26-No.27-No.219-No.88">
+<meta property="og:url" content="http://yoursite.com/2017/LeetCode NOTES (2) No.268-No.26-No.27-No.219-No.88/index.html">
+<meta property="og:site_name" content="Mr.Zhang's Coding Life">
+<meta property="og:description" content="今天第二天做LeetCode，争取每天做3~15道左右，锻炼一下自己的算法能力以及编程的严谨能力。　　1. Missing Number-268　　2. Remove Duplicates from Sorted Array-26　　3. Remove Element-27　　4. Contains Duplicate II-219　　5. Merge Sorted Array-88
+Missin">
+<meta property="og:updated_time" content="2017-02-03T14:00:30.610Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="LeetCode NOTES (2) No.268-No.26-No.27-No.219-No.88">
+<meta name="twitter:description" content="今天第二天做LeetCode，争取每天做3~15道左右，锻炼一下自己的算法能力以及编程的严谨能力。　　1. Missing Number-268　　2. Remove Duplicates from Sorted Array-26　　3. Remove Element-27　　4. Contains Duplicate II-219　　5. Merge Sorted Array-88
+Missin">
+
+
+
+<script type="text/javascript" id="hexo.configuration">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    scheme: 'Mist',
+    sidebar: {"position":"left","display":"post"},
+    fancybox: true,
+    motion: true,
+    duoshuo: {
+      userId: 0,
+      author: '博主'
+    }
+  };
+</script>
+
+  <title> LeetCode NOTES (2) No.268-No.26-No.27-No.219-No.88 | Mr.Zhang's Coding Life </title>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+
+
+
+  <script type="text/javascript">
+    var _hmt = _hmt || [];
+    (function() {
+      var hm = document.createElement("script");
+      hm.src = "//hm.baidu.com/hm.js?7ccda0d578d22c62e4a93038a6095937";
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(hm, s);
+    })();
+  </script>
+
+
+
+
+
+
+  
+  
+    
+  
+
+  <div class="container one-collumn sidebar-position-left page-post-detail ">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-meta ">
+  
+
+  <div class="custom-logo-site-title">
+    <a href="/"  class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <span class="site-title">Mr.Zhang's Coding Life</span>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+  </div>
+  <p class="site-subtitle">张先生的成长日记</p>
+</div>
+
+<div class="site-nav-toggle">
+  <button>
+    <span class="btn-bar"></span>
+    <span class="btn-bar"></span>
+    <span class="btn-bar"></span>
+  </button>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu ">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-home fa-fw"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories" rel="section">
+            
+              <i class="menu-item-icon fa fa-th fa-fw"></i> <br />
+            
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives" rel="section">
+            
+              <i class="menu-item-icon fa fa-archive fa-fw"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags" rel="section">
+            
+              <i class="menu-item-icon fa fa-tags fa-fw"></i> <br />
+            
+            标签
+          </a>
+        </li>
+      
+
+      
+      
+      
+    </ul>
+  
+
+  
+</nav>
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                LeetCode NOTES (2) No.268-No.26-No.27-No.219-No.88
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            <span class="post-meta-item-icon">
+              <i class="fa fa-calendar-o"></i>
+            </span>
+            <span class="post-meta-item-text">发表于</span>
+            <time itemprop="dateCreated" datetime="2017-02-03T11:00:00+08:00" content="2017-02-03">
+              2017-02-03
+            </time>
+          </span>
+
+          
+            <span class="post-category" >
+              &nbsp; | &nbsp;
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+              
+                <span itemprop="about" itemscope itemtype="https://schema.org/Thing">
+                  <a href="/source/categories/LeetCode/" itemprop="url" rel="index">
+                    <span itemprop="name">LeetCode</span>
+                  </a>
+                </span>
+
+                
+                
+
+              
+            </span>
+          
+
+          
+            
+              <span class="post-comments-count">
+                &nbsp; | &nbsp;
+                <a href="/2017/LeetCode NOTES (2) No.268-No.26-No.27-No.219-No.88/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count ds-thread-count" data-thread-key="2017/LeetCode NOTES (2) No.268-No.26-No.27-No.219-No.88/" itemprop="commentsCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+
+          
+          
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <p>　　今天第二天做LeetCode，争取每天做3~15道左右，锻炼一下自己的算法能力以及编程的严谨能力。<br>　　1. Missing Number-268<br>　　2. Remove Duplicates from Sorted Array-26<br>　　3. Remove Element-27<br>　　4. Contains Duplicate II-219<br>　　5. Merge Sorted Array-88</p>
+<h2 id="Missing_Number-268">Missing Number-268</h2><p>　　本题为一个自然数序列，看缺少哪个数。从题意可知，必然缺少一个，以下两种思路均为不错的解法。<br>　　1.对size()+1的序列求和（等差序列求和公式），然后对已知序列求和，两和相减可以得到缺失的数字。<br>这种方式有两种实现方法，一种是循环求和，一种是直接利用accumulate求和，accumulate(nums.begin() , nums.end() , 0);三个参数分别是：起始，结尾，初值。关键点是注意数据过大越界的情况，因此sum变量应该用long。此方法耗时29ms。<br>    核心代码如下<br><figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">long</span> sum=<span class="number">0</span>;<span class="comment">//accumulate(nums.begin() , nums.end() , 0);</span></span><br><span class="line"><span class="keyword">for</span>(<span class="keyword">int</span> num:nums)</span><br><span class="line">&#123;</span><br><span class="line">	sum+=num;</span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">return</span> ((nums.size()+<span class="number">1</span>)*nums.size()/<span class="number">2</span>)-sum;</span><br></pre></td></tr></table></figure></p>
+<p>　　2.用同一个变量，对vector中的每一个数进行异或，对正确的自然数序列也进行异或，最终得到的这个变量的数值，就是缺少的数字。此方法耗时也为29ms。水平有限，目前还没有找出来耗时更短的，<br>    核心代码如下<br><figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">int</span> result = nums.size();</span><br><span class="line"><span class="keyword">int</span> i=<span class="number">0</span>;</span><br><span class="line"><span class="keyword">for</span>(<span class="keyword">int</span> num:nums)&#123;</span><br><span class="line">	result ^= num;</span><br><span class="line">	result ^= i;</span><br><span class="line">	i++;</span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">return</span> result;</span><br></pre></td></tr></table></figure></p>
+<h2 id="Remove_Duplicates_from_Sorted_Array-26">Remove Duplicates from Sorted Array-26</h2><p>　　题目是删除一个已排序序列中重复的数字，最后返回新的序列的长度以及新的序列。最直接的思路是使用erase，发现重复项后直接删除掉，但是此思路耗时60ms，由此可见erase函数对时间的消耗比较大。然后就是另一个思路，就是将不重复的往前写，此时分为两套解决方式，一种方式是分别计数，即发现不同即+1，赋值到对应的位置；另一种方式是对重复进行计数，发现重复+1，赋值时将数据赋值到i-重复次数那里；后一种比前一种稍微快3ms。下面只展示第二种方式的代码。<br><figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">int</span> count = <span class="number">0</span>,n=nums.size();</span><br><span class="line"><span class="keyword">for</span>(<span class="keyword">int</span> i = <span class="number">1</span>; i &lt; n; i++)&#123;</span><br><span class="line">	<span class="keyword">if</span>(nums[i] == nums[i-<span class="number">1</span>]) count++;</span><br><span class="line">	<span class="keyword">else</span> nums[i-count] = nums[i];</span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">return</span> n-count;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<h2 id="Remove_Element-27">Remove Element-27</h2><p>　　此题是删除给定数组中的给定数据，由于题目中说了一句顺序无所谓以及超出长度无所谓，因此采用交换有用项的方式，如果发现该数据，将该数据与最后一个数据进行交换。注意点是需要注意交换之后，最后一个数据尚未进行判断，需要重新返回来进行判断该数据。<br><figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">int</span> right=<span class="number">0</span>,left=nums.size()-<span class="number">1</span>;</span><br><span class="line"><span class="keyword">for</span>(;right&lt;=left;right++)</span><br><span class="line">&#123;</span><br><span class="line">	<span class="keyword">if</span>(nums[right]==val)</span><br><span class="line">		nums[right--]=nums[left--];</span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">return</span> left+<span class="number">1</span>;</span><br></pre></td></tr></table></figure></p>
+<h2 id="Contains_Duplicate_II-219">Contains Duplicate II-219</h2><p>　　本题是看重复数字的下标的距离是否小于等于k，最简单的方式当然是两层循环。但是此题其实昨天总结过，就是查找类的问题，查找类的问题在C++中优先考虑unordered_map和unordered_set，后者和前者类似，只不过没有键值对，通过如下代码测试，发现其实unordered_map(39ms)的实现比unordered_set(49ms)要快一点点？（非定论）。<br>　　上面解决方法，最关键的部分是erase需要消耗一定的时间，想解决这个问题的话，就不erase，直接往里面添加，每次添加时检查是否已存在，如果已存在，检查距离，如距离小于等于k，则返回true。在这种解决方法中，发现m.count(nums[i])==0的方式比m.find(nums[i]) == m.end()的方式要快很多。前者仅需26ms，后者则需要39ms。<br><figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//使用unordered_map，39ms</span></span><br><span class="line"><span class="built_in">unordered_map</span>&lt;<span class="keyword">int</span>, <span class="keyword">int</span>&gt; hash;</span><br><span class="line"><span class="keyword">if</span>(k&lt;=<span class="number">0</span>) <span class="keyword">return</span> <span class="literal">false</span>;</span><br><span class="line"><span class="keyword">if</span>(k&gt;=nums.size()) k=nums.size()-<span class="number">1</span>;</span><br><span class="line"><span class="comment">// 一边循环每个数，一边加入hash表。</span></span><br><span class="line"><span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; nums.size(); i++) &#123;</span><br><span class="line">	<span class="keyword">if</span>(i&gt;k) hash.erase(nums[i-k-<span class="number">1</span>]);</span><br><span class="line">	<span class="keyword">if</span> (hash.find(nums[i]) != hash.end()) <span class="keyword">return</span> <span class="literal">true</span>;</span><br><span class="line">	hash[nums[i]] = i;</span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">return</span> <span class="literal">false</span>;</span><br><span class="line"></span><br><span class="line"><span class="comment">//使用unordered_set，49ms</span></span><br><span class="line"><span class="built_in">unordered_set</span>&lt;<span class="keyword">int</span>&gt; hash;</span><br><span class="line"><span class="keyword">if</span>(k&lt;=<span class="number">0</span>) <span class="keyword">return</span> <span class="literal">false</span>;</span><br><span class="line"><span class="keyword">if</span>(k&gt;=nums.size()) k=nums.size()-<span class="number">1</span>;</span><br><span class="line"><span class="comment">// 一边循环每个数，一边加入hash表。</span></span><br><span class="line"><span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; nums.size(); i++) &#123;</span><br><span class="line">	<span class="keyword">if</span>(i&gt;k) hash.erase(nums[i-k-<span class="number">1</span>]);</span><br><span class="line">	<span class="keyword">if</span> (hash.find(nums[i]) != hash.end()) <span class="keyword">return</span> <span class="literal">true</span>;</span><br><span class="line">	hash.insert(nums[i]);</span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">return</span> <span class="literal">false</span>;</span><br></pre></td></tr></table></figure></p>
+<p>　　下面是更好的解决办法的代码。<br><figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//使用m.count(nums[i])==0 ,26ms</span></span><br><span class="line"><span class="built_in">unordered_map</span>&lt;<span class="keyword">int</span>, <span class="keyword">int</span>&gt; m;</span><br><span class="line"><span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; nums.size(); ++i) &#123;</span><br><span class="line">	<span class="keyword">if</span> (m.count(nums[i])==<span class="number">0</span>) m[nums[i]] = i;</span><br><span class="line">	<span class="keyword">else</span> <span class="keyword">if</span>(i - m[nums[i]] &lt;= k) <span class="keyword">return</span> <span class="literal">true</span>;</span><br><span class="line">	<span class="keyword">else</span> m[nums[i]] = i;</span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">return</span> <span class="literal">false</span>;</span><br><span class="line"></span><br><span class="line"><span class="comment">//使用m.find(nums[i]) == m.end() ,39ms</span></span><br><span class="line"><span class="built_in">unordered_map</span>&lt;<span class="keyword">int</span>, <span class="keyword">int</span>&gt; m;</span><br><span class="line"><span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; nums.size(); ++i) &#123;</span><br><span class="line">	<span class="keyword">if</span> (m.find(nums[i]) == m.end()) m[nums[i]] = i;</span><br><span class="line">	<span class="keyword">else</span> <span class="keyword">if</span>(i - m[nums[i]] &lt;= k) <span class="keyword">return</span> <span class="literal">true</span>;</span><br><span class="line">	<span class="keyword">else</span> m[nums[i]] = i;</span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">return</span> <span class="literal">false</span>;</span><br></pre></td></tr></table></figure></p>
+<h2 id="Contains_Duplicate-217">Contains Duplicate-217</h2><p>　　本题和上题区别不大，更简单了很多，因此不再多说。<br>　　需要注意的是，有一种思想就是使用bit来控制大小的方式，此方式非常适合数组的大小（尤其是最大值最小值）已知且最好是相差不大，否则会有很大的空间占用，代码一并贴在下面，方便后面查阅。<br><figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//使用unordered_map，36ms</span></span><br><span class="line"><span class="built_in">unordered_map</span>&lt;<span class="keyword">int</span>,<span class="keyword">int</span>&gt; hash;</span><br><span class="line">   <span class="keyword">for</span>(<span class="keyword">int</span> i=<span class="number">0</span>;i&lt;nums.size();i++)</span><br><span class="line">   &#123;</span><br><span class="line">       <span class="keyword">if</span>(hash.count(nums[i])!=<span class="number">0</span>) <span class="keyword">return</span> <span class="literal">true</span>;</span><br><span class="line">       <span class="keyword">else</span></span><br><span class="line">           hash[nums[i]]=i;</span><br><span class="line">   &#125;</span><br><span class="line">   <span class="keyword">return</span> <span class="literal">false</span>;</span><br><span class="line"></span><br><span class="line"><span class="comment">//使用bitset，错误代码，留作查看</span></span><br><span class="line"><span class="built_in">bitset</span>&lt;2000000&gt; bs;</span><br><span class="line"><span class="keyword">for</span>(<span class="keyword">int</span> x: nums) &#123;</span><br><span class="line">	x+=<span class="number">1000000</span>; <span class="comment">//deal with negative</span></span><br><span class="line">	<span class="keyword">if</span>(bs.test(x))&#123;</span><br><span class="line">	    <span class="keyword">return</span> <span class="literal">true</span>;</span><br><span class="line">	&#125;</span><br><span class="line">	bs.<span class="built_in">set</span>(x);</span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">return</span> <span class="literal">false</span>;</span><br></pre></td></tr></table></figure></p>
+<h2 id="Merge_Sorted_Array-88">Merge Sorted Array-88</h2><p>　　合并两个已排序的数组，首先想到的方法是先强行合并在一起，然后进行快速排序，这个时间消耗大约为12ms；方法二是从大到小依次赋值给新的数组，比大小，大的进行赋值，这个时间消耗为3ms，代码如下。发现了一个现象，完全一样的代码，耗时会不太相同，前后最多差6ms，不同的提交点击方式？<br><figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//使用方法2，3ms</span></span><br><span class="line"><span class="keyword">for</span>(<span class="keyword">int</span> i=n-<span class="number">1</span>,j=m-<span class="number">1</span>,dst=m+n-<span class="number">1</span>;i&gt;=<span class="number">0</span>;)</span><br><span class="line">&#123;</span><br><span class="line">	<span class="keyword">if</span>(j&lt;<span class="number">0</span>)</span><br><span class="line">		nums1[dst--]=nums2[i--];</span><br><span class="line">	<span class="keyword">else</span> <span class="keyword">if</span>(nums1[j]&gt;nums2[i])</span><br><span class="line">		nums1[dst--]=nums1[j--];</span><br><span class="line">	<span class="keyword">else</span></span><br><span class="line">		nums1[dst--]=nums2[i--];</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>　　今天做了六道题，其实尚有余力，相信通过这种积累方式，做题会越来越顺手，越来越快，加油！</p>
+
+      
+    </div>
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/source/tags/Array/" rel="tag">#Array</a>
+          
+            <a href="/source/tags/C-C/" rel="tag">#C++/C</a>
+          
+            <a href="/source/tags/LeetCode/" rel="tag">#LeetCode</a>
+          
+        </div>
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2017/LeetCode NOTES (1) No.35-No.1-No.414-No.283/" rel="next" title="LeetCode NOTES (1) No.35-No.1-No.414-No.283">
+                <i class="fa fa-chevron-left"></i> LeetCode NOTES (1) No.35-No.1-No.414-No.283
+              </a>
+            
+          </div>
+
+          <div class="post-nav-prev post-nav-item">
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </article>
+
+
+
+    <div class="post-spread">
+      
+        <div class="ds-share flat" data-thread-key="2017/LeetCode NOTES (2) No.268-No.26-No.27-No.219-No.88/"
+     data-title="LeetCode NOTES (2) No.268-No.26-No.27-No.219-No.88"
+     data-content=""
+     data-url="http://yoursite.com/2017/LeetCode NOTES (2) No.268-No.26-No.27-No.219-No.88/">
+  <div class="ds-share-inline">
+    <ul  class="ds-share-icons-16">
+
+      <li data-toggle="ds-share-icons-more"><a class="ds-more" href="javascript:void(0);">分享到：</a></li>
+      <li><a class="ds-weibo" href="javascript:void(0);" data-service="weibo">微博</a></li>
+      <li><a class="ds-qzone" href="javascript:void(0);" data-service="qzone">QQ空间</a></li>
+      <li><a class="ds-qqt" href="javascript:void(0);" data-service="qqt">腾讯微博</a></li>
+      <li><a class="ds-wechat" href="javascript:void(0);" data-service="wechat">微信</a></li>
+
+    </ul>
+    <div class="ds-share-icons-more">
+    </div>
+  </div>
+</div>
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+  <div class="comments" id="comments">
+    
+      <div class="ds-thread" data-thread-key="2017/LeetCode NOTES (2) No.268-No.26-No.27-No.219-No.88/"
+           data-title="LeetCode NOTES (2) No.268-No.26-No.27-No.219-No.88" data-url="http://yoursite.com/2017/LeetCode NOTES (2) No.268-No.26-No.27-No.219-No.88/">
+      </div>
+    
+  </div>
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview sidebar-panel ">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+          <img class="site-author-image" itemprop="image"
+               src="/images/avatar.jpg"
+               alt="Mr.Zhang" />
+          <p class="site-author-name" itemprop="name">Mr.Zhang</p>
+          <p class="site-description motion-element" itemprop="description">伟大的工作，并不是用力量而是用耐心去完成的。 —— 约翰逊</p>
+        </div>
+        <nav class="site-state motion-element">
+          <div class="site-state-item site-state-posts">
+            <a href="/archives">
+              <span class="site-state-item-count">6</span>
+              <span class="site-state-item-name">日志</span>
+            </a>
+          </div>
+          
+          
+            <div class="site-state-item site-state-categories">
+              <a href="/categories">
+                <span class="site-state-item-count">3</span>
+                <span class="site-state-item-name">分类</span>
+              </a>
+            </div>
+          
+
+          
+            <div class="site-state-item site-state-tags">
+              <a href="/tags">
+                <span class="site-state-item-count">6</span>
+                <span class="site-state-item-name">标签</span>
+              </a>
+            </div>
+          
+
+        </nav>
+
+        
+
+        <div class="links-of-author motion-element">
+          
+            
+              <span class="links-of-author-item">
+                <a href="https://github.com/zhangxiaochen" target="_blank">
+                  
+                    <i class="fa fa-github"></i> GitHub
+                  
+                </a>
+              </span>
+            
+          
+        </div>
+
+        
+        
+
+        <div class="links-of-author motion-element">
+          
+        </div>
+
+      </section>
+
+      
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc-indicator-top post-toc-indicator">
+            <i class="fa fa-angle-double-up"></i>
+          </div>
+          <div class="post-toc">
+            
+              
+            
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#Missing_Number-268"><span class="nav-number">1.</span> <span class="nav-text">Missing Number-268</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Remove_Duplicates_from_Sorted_Array-26"><span class="nav-number">2.</span> <span class="nav-text">Remove Duplicates from Sorted Array-26</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Remove_Element-27"><span class="nav-number">3.</span> <span class="nav-text">Remove Element-27</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Contains_Duplicate_II-219"><span class="nav-number">4.</span> <span class="nav-text">Contains Duplicate II-219</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Contains_Duplicate-217"><span class="nav-number">5.</span> <span class="nav-text">Contains Duplicate-217</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Merge_Sorted_Array-88"><span class="nav-number">6.</span> <span class="nav-text">Merge Sorted Array-88</span></a></li></ol></div>
+            
+          </div>
+          <div class="post-toc-indicator-bottom post-toc-indicator">
+            <i class="fa fa-angle-double-down"></i>
+          </div>
+        </section>
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright" >
+  
+  &copy;  2015 - 
+  <span itemprop="copyrightYear">2017</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Mr.Zhang</span>
+</div>
+
+<div class="powered-by">
+  由 <a class="theme-link" href="http://hexo.io">Hexo</a> 强力驱动
+</div>
+
+<div class="theme-info">
+  主题 -
+  <a class="theme-link" href="https://github.com/iissnan/hexo-theme-next">
+    NexT.Mist
+  </a>
+</div>
+
+
+
+      </div>
+    </footer>
+
+    <div class="back-to-top"></div>
+  </div>
+
+  
+
+
+  
+
+
+
+  <script type="text/javascript" src="/vendors/jquery/index.js?v=2.1.3"></script>
+
+  <script type="text/javascript" src="/vendors/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+
+  <script type="text/javascript" src="/vendors/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+
+  <script type="text/javascript" src="/vendors/velocity/velocity.min.js"></script>
+
+  <script type="text/javascript" src="/vendors/velocity/velocity.ui.min.js"></script>
+
+  <script type="text/javascript" src="/vendors/fancybox/source/jquery.fancybox.pack.js"></script>
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=0.5.0"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=0.5.0"></script>
+
+
+
+  
+  
+
+  
+  
+<script type="text/javascript" src="/js/src/scrollspy.js?v=0.5.0"></script>
+
+<script type="text/javascript" id="sidebar.toc.highlight">
+  $(document).ready(function () {
+    var tocSelector = '.post-toc';
+    var $tocSelector = $(tocSelector);
+    var activeCurrentSelector = '.active-current';
+
+    $tocSelector
+      .on('activate.bs.scrollspy', function () {
+        var $currentActiveElement = $(tocSelector + ' .active').last();
+
+        removeCurrentActiveClass();
+        $currentActiveElement.addClass('active-current');
+
+        $tocSelector[0].scrollTop = $currentActiveElement.position().top;
+      })
+      .on('clear.bs.scrollspy', function () {
+        removeCurrentActiveClass();
+      });
+
+    function removeCurrentActiveClass () {
+      $(tocSelector + ' ' + activeCurrentSelector)
+        .removeClass(activeCurrentSelector.substring(1));
+    }
+
+    function processTOC () {
+      getTOCMaxHeight();
+      toggleTOCOverflowIndicators();
+    }
+
+    function getTOCMaxHeight () {
+      var height = $('.sidebar').height() -
+                   $tocSelector.position().top -
+                   $('.post-toc-indicator-bottom').height();
+
+      $tocSelector.css('height', height);
+
+      return height;
+    }
+
+    function toggleTOCOverflowIndicators () {
+      tocOverflowIndicator(
+        '.post-toc-indicator-top',
+        $tocSelector.scrollTop() > 0 ? 'show' : 'hide'
+      );
+
+      tocOverflowIndicator(
+        '.post-toc-indicator-bottom',
+        $tocSelector.scrollTop() >= $tocSelector.find('ol').height() - $tocSelector.height() ? 'hide' : 'show'
+      )
+    }
+
+    $(document).on('sidebar.motion.complete', function () {
+      processTOC();
+    });
+
+    $('body').scrollspy({ target: tocSelector });
+    $(window).on('resize', function () {
+      if ( $('.sidebar').hasClass('sidebar-active') ) {
+        processTOC();
+      }
+    });
+
+    onScroll($tocSelector);
+
+    function onScroll (element) {
+      element.on('mousewheel DOMMouseScroll', function (event) {
+          var oe = event.originalEvent;
+          var delta = oe.wheelDelta || -oe.detail;
+
+          this.scrollTop += ( delta < 0 ? 1 : -1 ) * 30;
+          event.preventDefault();
+
+          toggleTOCOverflowIndicators();
+      });
+    }
+
+    function tocOverflowIndicator (indicator, action) {
+      var $indicator = $(indicator);
+      var opacity = action === 'show' ? 1 : 0;
+      $indicator.velocity ?
+        $indicator.velocity('stop').velocity({
+          opacity: opacity
+        }, { duration: 100 }) :
+        $indicator.stop().animate({
+          opacity: opacity
+        }, 100);
+    }
+
+  });
+</script>
+
+<script type="text/javascript" id="sidebar.nav">
+  $(document).ready(function () {
+    var html = $('html');
+    var TAB_ANIMATE_DURATION = 200;
+    var hasVelocity = $.isFunction(html.velocity);
+
+    $('.sidebar-nav li').on('click', function () {
+      var item = $(this);
+      var activeTabClassName = 'sidebar-nav-active';
+      var activePanelClassName = 'sidebar-panel-active';
+      if (item.hasClass(activeTabClassName)) {
+        return;
+      }
+
+      var currentTarget = $('.' + activePanelClassName);
+      var target = $('.' + item.data('target'));
+
+      hasVelocity ?
+        currentTarget.velocity('transition.slideUpOut', TAB_ANIMATE_DURATION, function () {
+          target
+            .velocity('stop')
+            .velocity('transition.slideDownIn', TAB_ANIMATE_DURATION)
+            .addClass(activePanelClassName);
+        }) :
+        currentTarget.animate({ opacity: 0 }, TAB_ANIMATE_DURATION, function () {
+          currentTarget.hide();
+          target
+            .stop()
+            .css({'opacity': 0, 'display': 'block'})
+            .animate({ opacity: 1 }, TAB_ANIMATE_DURATION, function () {
+              currentTarget.removeClass(activePanelClassName);
+              target.addClass(activePanelClassName);
+            });
+        });
+
+      item.siblings().removeClass(activeTabClassName);
+      item.addClass(activeTabClassName);
+    });
+
+    $('.post-toc a').on('click', function (e) {
+      e.preventDefault();
+      var targetSelector = NexT.utils.escapeSelector(this.getAttribute('href'));
+      var offset = $(targetSelector).offset().top;
+      hasVelocity ?
+        html.velocity('stop').velocity('scroll', {
+          offset: offset  + 'px',
+          mobileHA: false
+        }) :
+        $('html, body').stop().animate({
+          scrollTop: offset
+        }, 500);
+    });
+
+    // Expand sidebar on post detail page by default, when post has a toc.
+    NexT.motion.middleWares.sidebar = function () {
+      var $tocContent = $('.post-toc-content');
+
+      if (CONFIG.sidebar.display === 'post' || CONFIG.sidebar.display === 'always') {
+        if ($tocContent.length > 0 && $tocContent.html().trim().length > 0) {
+          NexT.utils.displaySidebar();
+        }
+      }
+    };
+  });
+</script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=0.5.0"></script>
+
+
+
+  
+
+  
+    
+  
+
+  <script type="text/javascript">
+    var duoshuoQuery = {short_name:"zhangxiaochen"};
+    (function() {
+      var ds = document.createElement('script');
+      ds.type = 'text/javascript';ds.async = true;
+      ds.id = 'duoshuo-script';
+      ds.src = (document.location.protocol == 'https:' ? 'https:' : 'http:') + '//static.duoshuo.com/embed.js';
+      ds.charset = 'UTF-8';
+      (document.getElementsByTagName('head')[0]
+      || document.getElementsByTagName('body')[0]).appendChild(ds);
+    })();
+  </script>
+
+  
+    
+  
+
+
+
+
+
+  
+  
+
+  
+  
+
+
+</body>
+</html>

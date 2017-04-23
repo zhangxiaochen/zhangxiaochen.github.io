@@ -1,0 +1,879 @@
+<!doctype html>
+
+
+
+  
+
+
+<html class="theme-next mist use-motion">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+  <link href="/vendors/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css"/>
+
+
+
+
+
+
+<link href="/vendors/font-awesome/css/font-awesome.min.css?v=4.4.0" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=0.5.0" rel="stylesheet" type="text/css" />
+
+
+  <meta name="keywords" content="TCP/IP,传输层,计算机网络," />
+
+
+
+
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=0.5.0" />
+
+
+
+
+
+
+<meta name="description" content="看到一篇非常棒的系统讲解TCP/IP协议的博客，转载过来自己整理下。
+传输层的主要功能&amp;nbsp; &amp;nbsp; 1)传输层为应用进程之间提供端到端的逻辑通信(网络层是为主机到主机提供逻辑通信)。
+&amp;nbsp; &amp;nbsp;&amp;nbsp;2)复用和分用:&amp;nbsp;复用是指发送方不同的应用进程都可以使用同一个传输层协议传送数据;&amp;nbsp;分用是指接收方的传输层在剥去报文的首部之后能够把这些数据正确">
+<meta property="og:type" content="article">
+<meta property="og:title" content="TCP/IP入门(3) --传输层">
+<meta property="og:url" content="http://yoursite.com/2017/TCPIP入门(3)--传输层/index.html">
+<meta property="og:site_name" content="Mr.Zhang's Coding Life">
+<meta property="og:description" content="看到一篇非常棒的系统讲解TCP/IP协议的博客，转载过来自己整理下。
+传输层的主要功能&amp;nbsp; &amp;nbsp; 1)传输层为应用进程之间提供端到端的逻辑通信(网络层是为主机到主机提供逻辑通信)。
+&amp;nbsp; &amp;nbsp;&amp;nbsp;2)复用和分用:&amp;nbsp;复用是指发送方不同的应用进程都可以使用同一个传输层协议传送数据;&amp;nbsp;分用是指接收方的传输层在剥去报文的首部之后能够把这些数据正确">
+<meta property="og:image" content="http://img.blog.csdn.net/20150408143331702?watermark/2/text/aHR0cDovL2Jsb2cuY3Nkbi5uZXQvempmMjgwNDQxNTg5/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70/gravity/Center">
+<meta property="og:image" content="http://img.blog.csdn.net/20150408143345836?watermark/2/text/aHR0cDovL2Jsb2cuY3Nkbi5uZXQvempmMjgwNDQxNTg5/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70/gravity/Center">
+<meta property="og:image" content="http://img.blog.csdn.net/20150408143439902?watermark/2/text/aHR0cDovL2Jsb2cuY3Nkbi5uZXQvempmMjgwNDQxNTg5/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70/gravity/Center">
+<meta property="og:image" content="http://img.blog.csdn.net/20150408143433619?watermark/2/text/aHR0cDovL2Jsb2cuY3Nkbi5uZXQvempmMjgwNDQxNTg5/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70/gravity/Center">
+<meta property="og:image" content="http://img.blog.csdn.net/20150408143547981?watermark/2/text/aHR0cDovL2Jsb2cuY3Nkbi5uZXQvempmMjgwNDQxNTg5/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70/gravity/Center">
+<meta property="og:image" content="http://img.blog.csdn.net/20150408143511605?watermark/2/text/aHR0cDovL2Jsb2cuY3Nkbi5uZXQvempmMjgwNDQxNTg5/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70/gravity/Center">
+<meta property="og:image" content="http://img.blog.csdn.net/20150408143602149?watermark/2/text/aHR0cDovL2Jsb2cuY3Nkbi5uZXQvempmMjgwNDQxNTg5/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70/gravity/Center">
+<meta property="og:image" content="http://img.blog.csdn.net/20150408143657136?watermark/2/text/aHR0cDovL2Jsb2cuY3Nkbi5uZXQvempmMjgwNDQxNTg5/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70/gravity/Center">
+<meta property="og:image" content="http://img.blog.csdn.net/20150408143621384?watermark/2/text/aHR0cDovL2Jsb2cuY3Nkbi5uZXQvempmMjgwNDQxNTg5/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70/gravity/Center">
+<meta property="og:image" content="http://img.blog.csdn.net/20150408143633240?watermark/2/text/aHR0cDovL2Jsb2cuY3Nkbi5uZXQvempmMjgwNDQxNTg5/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70/gravity/Center">
+<meta property="og:image" content="http://img.blog.csdn.net/20150408143753545?watermark/2/text/aHR0cDovL2Jsb2cuY3Nkbi5uZXQvempmMjgwNDQxNTg5/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70/gravity/Center">
+<meta property="og:image" content="http://img.blog.csdn.net/20150408143737075?watermark/2/text/aHR0cDovL2Jsb2cuY3Nkbi5uZXQvempmMjgwNDQxNTg5/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70/gravity/Center">
+<meta property="og:updated_time" content="2017-04-23T14:41:43.103Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="TCP/IP入门(3) --传输层">
+<meta name="twitter:description" content="看到一篇非常棒的系统讲解TCP/IP协议的博客，转载过来自己整理下。
+传输层的主要功能&amp;nbsp; &amp;nbsp; 1)传输层为应用进程之间提供端到端的逻辑通信(网络层是为主机到主机提供逻辑通信)。
+&amp;nbsp; &amp;nbsp;&amp;nbsp;2)复用和分用:&amp;nbsp;复用是指发送方不同的应用进程都可以使用同一个传输层协议传送数据;&amp;nbsp;分用是指接收方的传输层在剥去报文的首部之后能够把这些数据正确">
+
+
+
+<script type="text/javascript" id="hexo.configuration">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    scheme: 'Mist',
+    sidebar: {"position":"left","display":"post"},
+    fancybox: true,
+    motion: true,
+    duoshuo: {
+      userId: 0,
+      author: '博主'
+    }
+  };
+</script>
+
+  <title> TCP/IP入门(3) --传输层 | Mr.Zhang's Coding Life </title>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+
+
+
+  <script type="text/javascript">
+    var _hmt = _hmt || [];
+    (function() {
+      var hm = document.createElement("script");
+      hm.src = "//hm.baidu.com/hm.js?7ccda0d578d22c62e4a93038a6095937";
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(hm, s);
+    })();
+  </script>
+
+
+
+
+
+
+  
+  
+    
+  
+
+  <div class="container one-collumn sidebar-position-left page-post-detail ">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-meta ">
+  
+
+  <div class="custom-logo-site-title">
+    <a href="/"  class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <span class="site-title">Mr.Zhang's Coding Life</span>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+  </div>
+  <p class="site-subtitle">张先生的成长日记</p>
+</div>
+
+<div class="site-nav-toggle">
+  <button>
+    <span class="btn-bar"></span>
+    <span class="btn-bar"></span>
+    <span class="btn-bar"></span>
+  </button>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu ">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-home fa-fw"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories" rel="section">
+            
+              <i class="menu-item-icon fa fa-th fa-fw"></i> <br />
+            
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives" rel="section">
+            
+              <i class="menu-item-icon fa fa-archive fa-fw"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags" rel="section">
+            
+              <i class="menu-item-icon fa fa-tags fa-fw"></i> <br />
+            
+            标签
+          </a>
+        </li>
+      
+
+      
+      
+      
+    </ul>
+  
+
+  
+</nav>
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                TCP/IP入门(3) --传输层
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            <span class="post-meta-item-icon">
+              <i class="fa fa-calendar-o"></i>
+            </span>
+            <span class="post-meta-item-text">发表于</span>
+            <time itemprop="dateCreated" datetime="2017-04-19T11:00:00+08:00" content="2017-04-19">
+              2017-04-19
+            </time>
+          </span>
+
+          
+            <span class="post-category" >
+              &nbsp; | &nbsp;
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+              
+                <span itemprop="about" itemscope itemtype="https://schema.org/Thing">
+                  <a href="/source/categories/计算机网络/" itemprop="url" rel="index">
+                    <span itemprop="name">计算机网络</span>
+                  </a>
+                </span>
+
+                
+                
+
+              
+            </span>
+          
+
+          
+            
+              <span class="post-comments-count">
+                &nbsp; | &nbsp;
+                <a href="/2017/TCPIP入门(3)--传输层/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count ds-thread-count" data-thread-key="2017/TCPIP入门(3)--传输层/" itemprop="commentsCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+
+          
+          
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <p>看到一篇非常棒的系统讲解TCP/IP协议的博客，转载过来自己整理下。</p>
+<h2 id="传输层的主要功能"><span style="color:rgb(255, 0, 0);"><span style="font-family:Courier New;">传输层的主要功能</span></span></h2><p><span style="font-family:Courier New;">&nbsp; &nbsp; 1)传输层为应用进程之间提供<span style="color:rgb(0,0,255);">端到端</span>的逻辑通信(网络层是为主机到主机提供逻辑通信)。</span></p>
+<p><span style="font-family:Courier New;"><span style="font-family: 'Courier New';">&nbsp; &nbsp;&nbsp;</span>2)复用和分用:&nbsp;复用是指发送方不同的应用进程都可以使用同一个传输层协议传送数据;&nbsp;分用是指接收方的传输层在剥去报文的首部之后能够把这些数据正确交付到目的应用进程.</span></p>
+<p><span style="font-family:Courier New;">    <span style="font-family: 'Courier New';">&nbsp; &nbsp;&nbsp;</span>3)传输层还会对收到的报文进行<span style="color:rgb(0,0,255);">差错检测(首部和数据部分),&nbsp;</span>而网络层只检查IP数据报的首部,&nbsp;不检验数据部分是否出错。</span></p>
+<p><span style="font-family:Courier New;">    <span style="font-family: 'Courier New';">&nbsp; &nbsp;&nbsp;</span>4)传输层需要有两种不同的运输协议:面向连接的传输控制协议&nbsp;TCP&nbsp;(Transmission&nbsp;Control&nbsp;Protocol)和无连接的用户数据报协议&nbsp;UDP&nbsp;(User&nbsp;Datagram&nbsp;Protocol);</span></p>
+<p><span style="font-family:Courier New;">&nbsp;</span></p>
+<p><span style="font-family:Courier New;font-size:18px;"><strong>流量控制与拥塞控制的区别</strong></span></p>
+<p><span style="font-family:Courier New;"><span style="font-family: 'Courier New';">&nbsp; &nbsp;&nbsp;</span>流量控制往往是指在发送端和接收端之间的点对点通信量的控制.&nbsp;流量控制所要做的是抑制发送端发送数据的速率,&nbsp;以便使接收端来得及接收;&nbsp;而拥塞控制必须确保通信子网能够传送待传送的数据,&nbsp;是一个全局性的问题,&nbsp;涉及网络中所有的主机、路由器以及导致网络传输能力下降的所有因素.</span></p>
+<p><span style="font-family:Courier New;">&nbsp;</span></p>
+<p><span style="font-family:Courier New;font-size:18px;"><strong>端口</strong></span></p>
+<p><span style="font-family:Courier New;">    <span style="font-family: 'Courier New';">&nbsp; &nbsp;&nbsp;</span>端口就是传输层的服务访问点,&nbsp;用一个&nbsp;16位的数字进行标标记。</span></p>
+<p><span style="font-family:Courier New;">    <span style="font-family: 'Courier New';">&nbsp; &nbsp;&nbsp;</span>端口号只具有本地意义,即端口号只是为了标志本计算机应用层中的各进程。在因特网中不同计算机的相同端口号是没有联系的。</span></p>
+<p><span style="font-family:Courier New;">    <span style="font-family: 'Courier New';">&nbsp; &nbsp;&nbsp;</span>端口的作用是让应用层的各种应用进程都能将其数据通过端口向下交付给传输层,以及让传输层知道应当将其报文段中的数据向上通过端口交付给应用层的哪个进程。</span></p>
+<p><span style="font-family:Courier New;">    <span style="font-family: 'Courier New';">&nbsp; &nbsp;&nbsp;</span>从这个意义上讲,端口是用来标志应用层的进程;</span></p>
+<p><span style="font-family:Courier New;">&nbsp;</span></p>
+<p><span style="font-family:Courier New;font-size:18px;">常用端口号</span></p>
+<table><tbody><tr><td valign="top" style="background:rgb(75,172,198);"><br><br><span style="color:rgb(255,255,255);"><span style="font-family:Courier New;">应用程序</span></span><br></td><td valign="top" style="background:rgb(75,172,198);"><br><br><span style="color:rgb(255,255,255);"><span style="font-family:Courier New;">echo</span></span><br></td><td valign="top" style="background:rgb(75,172,198);"><br><br><span style="color:rgb(255,255,255);"><span style="font-family:Courier New;">ftp</span></span><br></td><td valign="top" style="background:rgb(75,172,198);"><br><br><span style="color:rgb(255,255,255);"><span style="font-family:Courier New;">ssh</span></span><br></td><td valign="top" style="background:rgb(75,172,198);"><br><br><span style="color:rgb(255,255,255);"><span style="font-family:Courier New;">telnet</span></span><br></td><td valign="top" style="background:rgb(75,172,198);"><br><br><span style="color:rgb(255,255,255);"><span style="font-family:Courier New;">smtp</span></span><br></td></tr><tr><td valign="top" style="background:rgb(183,221,232);"><br><br><span style="font-family:Courier New;">端口号</span><br></td><td valign="top" style="background:rgb(183,221,232);"><br><br><span style="font-family:Courier New;">7</span><br></td><td valign="top" style="background:rgb(183,221,232);"><br><br><span style="font-family:Courier New;">20,21</span><br></td><td valign="top" style="background:rgb(183,221,232);"><br><br><span style="font-family:Courier New;">22</span><br></td><td valign="top" style="background:rgb(183,221,232);"><br><br><span style="font-family:Courier New;">23</span><br></td><td valign="top" style="background:rgb(183,221,232);"><br><br><span style="font-family:Courier New;">25</span><br></td></tr><tr><td valign="top"><br><br><span style="font-family:Courier New;">应用程序</span><br></td><td valign="top"><br><br><span style="font-family:Courier New;">dns</span><br></td><td valign="top"><br><br><span style="font-family:Courier New;">dhcp</span><br></td><td valign="top"><br><br><span style="font-family:Courier New;">tftp</span><br></td><td valign="top"><br><br><span style="font-family:Courier New;">http</span><br></td><td valign="top"><br><br><span style="font-family:Courier New;">pop3</span><br></td></tr><tr><td valign="top" style="background:rgb(183,221,232);"><br><br><span style="font-family:Courier New;">端口号</span><br></td><td valign="top" style="background:rgb(183,221,232);"><br><br><span style="font-family:Courier New;">53</span><br></td><td valign="top" style="background:rgb(183,221,232);"><br><br><span style="font-family:Courier New;">67,&nbsp;68</span><br></td><td valign="top" style="background:rgb(183,221,232);"><br><br><span style="font-family:Courier New;">69</span><br></td><td valign="top" style="background:rgb(183,221,232);"><br><br><span style="font-family:Courier New;">80</span><br></td><td valign="top" style="background:rgb(183,221,232);"><br><br><span style="font-family:Courier New;">110</span><br></td></tr></tbody></table>
+
+<p><span style="font-family:Courier New;">&nbsp;</span></p>
+<h2 id="TCP&nbsp;VS&nbsp;UDP"><span style="color:rgb(255, 0, 0);"><span style="font-family:Courier New;">TCP&nbsp;VS&nbsp;UDP</span></span></h2><p><span style="font-family:Courier New;">1)TCP</span></p>
+<p><span style="font-family:Courier New;">    <span style="font-family: 'Courier New';">&nbsp; &nbsp;&nbsp;</span>TCP是一种<span style="color:rgb(0,0,255);">面向连接的</span><span style="color:rgb(0,0,255);">(一对一)</span>,提供<span style="color:rgb(0,0,255);">可靠交付</span><span style="color:rgb(0,0,255);">的</span>和<span style="color:rgb(0,0,255);">全双工通信的</span>,基于<span style="color:rgb(0,0,255);">字节流的</span>端到端传输层通信协议。</span></p>
+<p><span style="font-family:Courier New;"><span style="font-family: 'Courier New';">&nbsp; &nbsp;&nbsp;</span>面向连接:&nbsp;TCP在传输数据之前必须先建立连接,数据传输结束后要释放连接。</span></p>
+<p><span style="font-family:Courier New;"><span style="font-family: 'Courier New';">&nbsp; &nbsp;&nbsp;</span>一对一:&nbsp;每一条TCP连接只能有2个端点,故TCP不提供广播或多播服务。</span></p>
+<p><span style="font-family:Courier New;"><span style="font-family: 'Courier New';">&nbsp; &nbsp;&nbsp;</span>可靠交付:&nbsp;TCP提供可靠交付,通过TCP连接传输的数据,无差错、不丢失、不重复、并且按序到达。</span></p>
+<p><span style="font-family:Courier New;"><span style="font-family: 'Courier New';">&nbsp; &nbsp;&nbsp;</span>基于字节流:&nbsp;TCP是面向字节流的。虽然应用进程和TCP的交互是一次一个数据块(大小不等),但TCP把应用程序交下来的数据仅仅看成是一连串的无结构的字节流,&nbsp;而并不知道所传输的字节流的含义。</span></p>
+<p><span style="font-family:Courier New;">&nbsp;</span></p>
+<p><span style="font-family:Courier New;">2)UDP</span></p>
+<p><span style="font-family:Courier New;">    <span style="font-family: 'Courier New';">&nbsp; &nbsp;&nbsp;</span>UDP是一种<span style="color:rgb(0,0,255);">无连接的</span>,<span style="color:rgb(0,0,255);">尽最大努力交付的</span>和<span style="color:rgb(0,0,255);">全双工通信的</span>,<span style="color:rgb(0,0,255);">基于报文</span><span style="color:rgb(0,0,255);">段</span>的端到端传输层通信协议。</span></p>
+<p><span style="font-family:Courier New;"><span style="font-family: 'Courier New';">&nbsp; &nbsp;&nbsp;</span>无连接:&nbsp;UDP在发送数据之前<span style="color:rgb(0,0,255);">不需要建立连接</span></span></p>
+<p><span style="font-family:Courier New;"><span style="font-family: 'Courier New';">&nbsp; &nbsp;&nbsp;</span>尽最大努力交付:&nbsp;UDP不保证可靠交付,主机不需要维持复杂的连接状态</span></p>
+<p><span style="font-family:Courier New;"><span style="font-family: 'Courier New';">&nbsp; &nbsp;&nbsp;</span>面向报文:&nbsp;UDP是<span style="color:rgb(0,0,255);">面向报文的</span>。UDP对应用层交下来的报文,<span style="color:rgb(0,0,255);">既不合并</span><span style="color:rgb(0,0,255);">,</span><span style="color:rgb(0,0,255);">也不拆分</span>,而是保留这些报文的的边界,即应用层交给UDP多长的报文,UDP就照样发送,即一次发送一个报文。在接收端,UDP一次交付一个完整的报文,&nbsp;因此应用程序需要选择合适的报文大小。</span></p>
+<p><span style="font-family:Courier New;">其他:</span></p>
+<p><span style="font-family:Courier New;"><span style="font-family: 'Courier New';">&nbsp; &nbsp;&nbsp;</span>UDP<span style="color:rgb(0,0,255);">没有拥塞控制</span>,网络出现的拥塞不会使源主机的发送速率降低。</span></p>
+<p><span style="font-family:Courier New;"><span style="font-family: 'Courier New';">&nbsp; &nbsp;&nbsp;</span>UDP支持一对一、一对多、多对一和多对多的交互通信。</span></p>
+<p><span style="font-family:Courier New;"><span style="font-family: 'Courier New';">&nbsp; &nbsp;&nbsp;</span>UDP的<span style="color:rgb(0,0,255);">首部开销小</span>,只有8个字节,比TCP的20个字节的首部要短。</span></p>
+<p><span style="font-family:Courier New;">&nbsp;</span></p>
+<p><span style="font-family:Courier New;">3)区别</span></p>
+<table><tbody><tr><td valign="top" style="background:rgb(247,150,70);"><br><br><span style="color:rgb(255,255,255);"><span style="font-family:Courier New;">TCP</span></span><br></td><td valign="top" style="background:rgb(247,150,70);"><br><br><span style="color:rgb(255,255,255);"><span style="font-family:Courier New;">UDP</span></span><br></td></tr><tr><td valign="top" style="background:rgb(251,213,181);"><br><br><span style="font-family:Courier New;">面向连接</span><br></td><td valign="top" style="background:rgb(251,213,181);"><br><br><span style="font-family:Courier New;">无连接</span><br></td></tr><tr><td valign="top"><br><br><span style="font-family:Courier New;">传输速度慢</span><br></td><td valign="top"><br><br><span style="font-family:Courier New;">传输速度快</span><br></td></tr><tr><td valign="top" style="background:rgb(251,213,181);"><br><br><span style="font-family:Courier New;">保证数据有序到达</span><br></td><td valign="top" style="background:rgb(251,213,181);"><br><br><span style="font-family:Courier New;">不保证数据有序到达</span><br></td></tr><tr><td valign="top"><br><br><span style="font-family:Courier New;">保证数据正确性</span><br></td><td valign="top"><br><br><span style="font-family:Courier New;">可能丢包</span><br></td></tr><tr><td valign="top" style="background:rgb(251,213,181);"><br><br><span style="font-family:Courier New;">TCP报文段</span><br></td><td valign="top" style="background:rgb(251,213,181);"><br><br><span style="font-family:Courier New;">UDP用户数据报</span><br></td></tr><tr><td valign="top"><br><br><span style="font-family:Courier New;">系统资源要求多(需要内核维护发送/接受缓冲区)</span><br></td><td valign="top"><br><br><span style="font-family:Courier New;">要求少(不需要内核维护缓冲区,&nbsp;直接将数据报发送到网络上,&nbsp;或直接交付给进程)</span><br></td></tr><tr><td valign="top" style="background:rgb(251,213,181);"><br><br><span style="font-family:Courier New;">适用于对效率要求相对低,但对准确性要求相对高的场景下,或者是有一种连接概念的场景(如HTTP服务)</span><br></td><td valign="top" style="background:rgb(251,213,181);"><br><br><span style="font-family:Courier New;">适用于对效率要求相对高,对准确性要求相对低的场景(如视频点播)</span><br></td></tr></tbody></table><span style="font-family:Courier New;"><br></span><br><br>## <span style="color:rgb(255, 0, 0);"><span style="font-family:Courier New;">UDP数据报</span></span><br><table cellpadding="0" cellspacing="0"></table>
+
+<p><span style="font-family:Courier New;">&nbsp;<img src="http://img.blog.csdn.net/20150408143331702?watermark/2/text/aHR0cDovL2Jsb2cuY3Nkbi5uZXQvempmMjgwNDQxNTg5/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70/gravity/Center" alt=""></span></p>
+<p><span style="font-family:Courier New;">UDP有两个字段:&nbsp;首部字段和数据字段。</span></p>
+<p><span style="font-family:Courier New;">首部字段很简单,只有8个字节,由4个字段组成,每个字段的长度都是两个字节。</span></p>
+<table><tbody><tr><td valign="top" style="background:rgb(155,187,89);"><br><br><span style="font-family:Courier New;"><span style="color:rgb(255,255,255);">源端口</span><span style="color:rgb(255,255,255);">号</span></span><br></td><td valign="top" style="background:rgb(155,187,89);"><br><br><span style="color:rgb(255,255,255);"><span style="font-family:Courier New;">在需要对方回信时选用。不需要时可用全0</span></span><br></td></tr><tr><td valign="top" style="background:rgb(215,227,188);"><br><br><span style="font-family:Courier New;">目的端口号</span><br></td><td valign="top" style="background:rgb(215,227,188);"><br><br><span style="font-family:Courier New;">这在终点交付报文时必须要使用到</span><br></td></tr><tr><td valign="top"><br><br><span style="font-family:Courier New;">UDP长度</span><br></td><td valign="top"><br><br><span style="font-family:Courier New;">UDP用户数据报的长度,其最小值是8(仅有首部)</span><br></td></tr><tr><td valign="top" style="background:rgb(215,227,188);"><br><br><span style="font-family:Courier New;">UDP校验和</span><br></td><td valign="top" style="background:rgb(215,227,188);"><br><br><span style="font-family:Courier New;">检测UDP用户数据报在传输中是否有错。有错就丢弃</span><br></td></tr></tbody></table>
+
+<p><span style="font-family:Courier New;">&nbsp;</span></p>
+<p><span style="font-family:Courier New;font-size:18px;"><strong>UDP校验</strong></span></p>
+<p><span style="font-family:Courier New;"><span style="font-family: 'Courier New';">&nbsp; &nbsp;&nbsp;</span>UDP首部中校验和的计算方法有些特殊。在计算校验和时,要在UDP用户数据报之前增加12个字节的伪首部。伪首部既不向下传送也不向上递交,而仅仅是为了计算校验和。与IP数据报的校验和只校验IP数据报的首部不同,<span style="color:rgb(51,102,255);">UDP的校验和是把首部和数据部分一起都校验。</span></span></p>
+<p><span style="color:rgb(51,102,255);"><span style="font-family:Courier New;"><img src="http://img.blog.csdn.net/20150408143345836?watermark/2/text/aHR0cDovL2Jsb2cuY3Nkbi5uZXQvempmMjgwNDQxNTg5/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70/gravity/Center" alt=""><br></span></span></p>
+<p><span style="font-family:Courier New;"><span style="font-family: 'Courier New';">&nbsp; &nbsp;&nbsp;</span>在计算检验和时,临时把“伪首部”和&nbsp;UDP&nbsp;用户数据报连接在一起。伪首部仅仅是为了计算检验和,&nbsp;示例如下:</span></p>
+<p><span style="font-family:Courier New;">&nbsp;<img src="http://img.blog.csdn.net/20150408143439902?watermark/2/text/aHR0cDovL2Jsb2cuY3Nkbi5uZXQvempmMjgwNDQxNTg5/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70/gravity/Center" alt=""></span></p>
+<p><span style="font-family:Courier New;"><span style="font-family: 'Courier New';">&nbsp; &nbsp;&nbsp;</span>在发送方,首先是把全零放入校验和字段并且添加伪首部。然后,把UDP数据报看成是由许多16位的字串连接起来。若UDP数据报的数据部分不是偶数个字节,则要在数据部分末尾增加一个全零字节(但此字节不发送)。接下来就按二进制反码计算出这些16位字的和。将此和的二进制反码写入校验和字段。在接收方,把收到的UDP数据报加上伪首部(如果不为偶数个字节,还需要补上全零字节)后,按二进制反码计算出这些16位字的和。当无差错时其结果应全为1。否则就表明有差错出现,接收方就应该丢弃这个UDP数据报。</span><br><span style="font-family:Courier New;"><br></span></p>
+<h2 id="TCP报文段"><span style="color:rgb(255, 0, 0);"><span style="font-family:Courier New;">TCP报文段</span></span></h2><p><span style="font-family:Courier New;"><img src="http://img.blog.csdn.net/20150408143433619?watermark/2/text/aHR0cDovL2Jsb2cuY3Nkbi5uZXQvempmMjgwNDQxNTg5/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70/gravity/Center" alt=""></span></p>
+<table><tbody><tr><td width="568" valign="top" colspan="2" style="background:rgb(247,150,70);"><br><br><span style="color:rgb(255,255,255);"><span style="font-family:Courier New;">协议描述</span></span><br></td></tr><tr><td valign="top" style="background:rgb(251,213,181);"><br><br><span style="font-family:Courier New;">源端口/目的端口</span><br></td><td valign="top" style="background:rgb(251,213,181);"><br><br><span style="font-family:Courier New;">源/目的主机的IP地址加上端口号构成一个TCP连接(Socket)</span><br></td></tr><tr><td valign="top"><br><br><span style="font-family:Courier New;">序号和确认号</span><br></td><td valign="top"><br><br><span style="font-family:Courier New;">序号为该TCP数据包的第一个字节在所发送的数据流中的偏移量;确认号为希望接收的下一个数据字节的序号;</span><br></td></tr><tr><td valign="top" style="background:rgb(251,213,181);"><br><br><span style="font-family:Courier New;">数据偏移(首部长度)</span><br></td><td valign="top" style="background:rgb(251,213,181);"><br><br><span style="font-family:Courier New;">以4个字节为单位,通常为20个字节</span><br></td></tr><tr><td valign="top"><br><br><span style="font-family:Courier New;">6个标志位:</span><br></td><td valign="top"><br><br><span style="font-family:Courier New;">&nbsp;</span><br></td></tr><tr><td valign="top" style="background:rgb(251,213,181);"><br><br><span style="font-family:Courier New;">&nbsp;&nbsp;&nbsp;&nbsp;URG</span><br></td><td valign="top" style="background:rgb(251,213,181);"><br><br><span style="font-family:Courier New;">如果使用了紧急指针,URG置1,紧急指针为当前序号到紧急数据位置的偏移量(常用于发送/接受带外数据)</span><br></td></tr><tr><td valign="top"><br><br><span style="font-family:Courier New;">&nbsp;&nbsp;&nbsp;&nbsp;ACK</span><br></td><td valign="top"><br><br><span style="font-family:Courier New;">为1表示确认号有效,为0表示该TCP数据包不包含确认信息</span><br></td></tr><tr><td valign="top" style="background:rgb(251,213,181);"><br><br><span style="font-family:Courier New;">&nbsp;&nbsp;&nbsp;&nbsp;PSH</span><br></td><td valign="top" style="background:rgb(251,213,181);"><br><br><span style="font-family:Courier New;">表示是带有PUSH标志的数据,接收到数据后不必等缓冲区满再发送(较少使用)</span><br></td></tr><tr><td valign="top"><br><br><span style="font-family:Courier New;">&nbsp;&nbsp;&nbsp;&nbsp;RST</span><br></td><td valign="top"><br><br><span style="font-family:Courier New;">置为1时表示TCP连接中出现了严重的差错,&nbsp;必须释放连接,&nbsp;然后重建连接,&nbsp;也可用于拒绝非法的数据或拒绝连接请求</span><br></td></tr><tr><td valign="top" style="background:rgb(251,213,181);"><br><br><span style="font-family:Courier New;">&nbsp;&nbsp;&nbsp;&nbsp;SYN</span><br></td><td valign="top" style="background:rgb(251,213,181);"><br><br><span style="font-family:Courier New;">用于建立连接,连接请求时SYN＝1,ACK=0;响应连接请求时SYN=1,ACK=1</span><br></td></tr><tr><td valign="top"><br><br><span style="font-family:Courier New;">&nbsp;&nbsp;&nbsp;&nbsp;FIN</span><br></td><td valign="top"><br><br><span style="font-family:Courier New;">用于释放连接,表示发送方已经没有供发送的数据</span><br></td></tr><tr><td valign="top" style="background:rgb(251,213,181);"><br><br><span style="font-family:Courier New;">窗口大小</span><br></td><td valign="top" style="background:rgb(251,213,181);"><br><br><span style="font-family:Courier New;">用来让对方设置发送窗口的大小(用于流量控制)</span><br></td></tr><tr><td valign="top"><br><br><span style="font-family:Courier New;">校验和</span><br></td><td valign="top"><br><br><span style="font-family:Courier New;">校验和覆盖了整个数据包,包括对数据包的首部和数据</span><br></td></tr><tr><td valign="top" style="background:rgb(251,213,181);"><br><br><span style="font-family:Courier New;">紧急指针</span><br></td><td valign="top" style="background:rgb(251,213,181);"><br><br><span style="font-family:Courier New;">指出本报文段中紧急指针共占用多少个字节(紧急数据放在本报文段数据的最前面)</span><br></td></tr><tr><td valign="top"><br><br><span style="font-family:Courier New;">选项</span><br></td><td valign="top"><br><br><span style="font-family:Courier New;">常见的选项是MSS(Maximum&nbsp;Segment&nbsp;Size,&nbsp;最大报文长度)</span><br></td></tr><tr><td valign="top" style="background:rgb(251,213,181);"><br><br><span style="font-family:Courier New;">填充字段</span><br></td><td valign="top" style="background:rgb(251,213,181);"><br><br><span style="font-family:Courier New;">为了使整个首部为4字节整数倍</span><br></td></tr></tbody></table><span style="font-family:Courier New;"><br></span><br><br>## <span style="color:rgb(255, 0, 0);"><span style="font-family:Courier New;">TCP三次握手</span></span><br><br><span style="font-family:Courier New;font-size:18px;"><strong>为什么需要采用三次握手?</strong></span><br><br><span style="font-family:Courier New;"><span style="font-family: 'Courier New';">&nbsp; &nbsp;&nbsp;</span>主要是为了<span style="color:rgb(255,0,0);">防止两次握手情况下已失效的连接请求报文段突然又传送到服务端</span><span style="color:rgb(255,0,0);">,</span><span style="color:rgb(255,0,0);">而产生</span><span style="color:rgb(255,0,0);">的</span><span style="color:rgb(255,0,0);">错误</span>。举例如下:</span><br><br><span style="font-family:Courier New;"><span style="font-family: 'Courier New';">&nbsp; &nbsp;&nbsp;</span>客户A向服务器B发出TCP连接请求,第一个连接请求报文在网络的某个节点长时间滞留,A超时后认为报文丢失,于是再重传一次连接请求,B收到后建立连接。数据传输完毕后双方断开连接。而此时,前一个滞留在网络中的连接请求到达了服务端B,而B认为A又发来连接请求,若采用的是“两次握手”,则这种情况下B认为传输连接已经建立,并一直等待A传输数据,而A此时并无连接请求,因此不予理睬,这样就造成了B的资源白白浪费了;但此时若是使用“三次握手”,则B向A返回确认报文段,由于是一个失效的请求,因此A不予理睬,建立连接失败。第三次握手的作用:<span style="color:rgb(51,102,255);">防止已失效的连接请求报文段突然</span><span style="color:rgb(51,102,255);">又</span><span style="color:rgb(51,102,255);">传送到了服务器</span>。</span><br><br><span style="font-family:Courier New;">&nbsp;</span><br><br><span style="font-family:Courier New;font-size:18px;"><strong>三次握手过程</strong></span><br><br><span style="font-family:Courier New;">&nbsp;<img src="http://img.blog.csdn.net/20150408143547981?watermark/2/text/aHR0cDovL2Jsb2cuY3Nkbi5uZXQvempmMjgwNDQxNTg5/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70/gravity/Center" alt=""></span><br><br><span style="font-family:Courier New;">&nbsp;</span><br><br><span style="font-family:Courier New;"><span style="font-family: 'Courier New';">&nbsp; &nbsp;&nbsp;</span>1)第一次握手:客户机的TCP首先向服务器的TCP发送一个连接请求报文段。这个特殊的报文段中不含应用层数据,其首部中的SYN标志位被置为1。另外,客户机会随机选择一个起始序号seq=x(连接请求报文不携带数据,但要消耗掉一个序号)。</span><br><br><span style="font-family:Courier New;"><span style="font-family: 'Courier New';">&nbsp; &nbsp;&nbsp;</span>2)第二次握手:服务器的TCP收到连接请求报文段后,如同意建立连接,就向客户机发回确认,并在OS内核中<span style="color:rgb(51,102,255);">为该TCP连接分配TCP缓存和变量</span>。在确认报文段中,SYN和ACK位都被置为1,确认号字段的值为x+1(表示希望收到的下一个字节的序号为x+1),并且服务器随机产生起始序号seq=y(确认报文不携带数据,但也要消耗掉一个序号)。</span><br><br><span style="font-family:Courier New;"><span style="font-family: 'Courier New';">&nbsp; &nbsp;&nbsp;</span>3)第三次握手:当客户机收到确认报文段后,还要向服务器给出确认,并且也要在client端的OS内核中给<span style="color:rgb(51,102,255);">该连接分配缓存和变量</span>。这个报文段的ACK标志位被置1,序号字段为x+1,确认号字段为y+1。</span><br><br><span style="font-family:Courier New;"><span style="font-family: 'Courier New';">&nbsp; &nbsp;&nbsp;</span>需要注意的是:服务器端的资源是在完成第二次握手时分配的,而客户端的资源是在完成第三次握手时分配的。这就使得服务器易于受到SYN洪泛攻击。</span><br><br><span style="font-family:Courier New;">&nbsp;</span><br><br>## <span style="color:rgb(255, 0, 0);"><span style="font-family:Courier New;">TCP四次断开</span></span><br><br><span style="font-family:Courier New;">&nbsp;<img src="http://img.blog.csdn.net/20150408143511605?watermark/2/text/aHR0cDovL2Jsb2cuY3Nkbi5uZXQvempmMjgwNDQxNTg5/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70/gravity/Center" alt=""></span><br><br><span style="font-family:Courier New;"><span style="font-family: 'Courier New';">&nbsp; &nbsp;&nbsp;</span>1)第一次断开:客户机打算关闭连接,就向其TCP发送一个连接释放报文段,并停止发送数据,主动关闭TCP连接,该报文段的FIN标志位被置1,seq=u,它等于前面已传送过的数据的最后一个字节的序号加1(FIN报文段即使不携带数据,也要消耗掉一个序号)。</span><br><br><span style="font-family:Courier New;"><span style="font-family: 'Courier New';">&nbsp; &nbsp;&nbsp;</span>2)第二次断开:服务器收到连接释放报文段后即发出确认,确认号是ack=u+1,而这个报文段自己的序号是v,等于它前面已传送过的数据的最后一个字节的序号加1。此时,<span style="color:rgb(51,102,255);">从客户机到服务器这个方向的连接就释放了</span>,TCP连接处于<span style="color:rgb(255,0,0);">半关闭状态</span>。但<span style="color:rgb(255,0,0);">服务器若发送数据</span><span style="color:rgb(255,0,0);">,</span><span style="color:rgb(255,0,0);">客户机仍要接收</span><span style="color:rgb(255,0,0);">,</span><span style="color:rgb(255,0,0);">即从服务器到客户机这个方向的连接并未关闭</span>。</span><br><br><span style="font-family:Courier New;"><span style="font-family: 'Courier New';">&nbsp; &nbsp;&nbsp;</span>3)第三次断开:若服务器已经没有要向客户机发送的数据,就通知TCP释放连接,此时其发出FIN=1的连接释放报文段(注意:&nbsp;此时确认号字段值仍为u+1,&nbsp;因为这段时间里,&nbsp;客户端并未发送任何数据到服务器)。</span><br><br><span style="font-family:Courier New;"><span style="font-family: 'Courier New';">&nbsp; &nbsp;&nbsp;</span>4)第四次断开:客户机收到连接释放报文段后,必须发出确认。在确认报文段中,ACK字段被置为1,确认号ack=w+1,序号seq=u+1。此时TCP连接还没有释放掉,必须经过时间等待计时器设置的时间<span style="color:rgb(255,0,0);">2MSL</span>后,A才进入到连接关闭状态。</span><br><br><span style="font-family:Courier New;">&nbsp;</span><br><br>## <span style="color:rgb(255, 0, 0);"><span style="font-family:Courier New;">TIME_WAIT状态</span></span><br><br><span style="font-family:Courier New;"><span style="font-family: 'Courier New';">&nbsp; &nbsp;&nbsp;</span>1)<span style="color:rgb(51,102,255);">为了保证客户端发送的最后一个ACK报文段能够达到服务器</span>。&nbsp;这个ACK报文段可能丢失,因而使处在LAST_ACK状态的服务器收不到确认。这样的话,&nbsp;服务器会<span style="color:rgb(255,0,0);">超时重传FIN+ACK报文段</span><span style="color:rgb(255,0,0);">,</span><span style="color:rgb(255,0,0);">客户端就能在2MSL时间内收到这个重传的FIN+ACK报文段</span><span style="color:rgb(255,0,0);">,</span><span style="color:rgb(255,0,0);">接着客户端重传一次确认</span><span style="color:rgb(255,0,0);">,</span><span style="color:rgb(255,0,0);">重启计时器</span>。最后,客户端和服务器都正常进入到CLOSED状态。</span><br><br><span style="font-family:Courier New;"><span style="font-family: 'Courier New';">&nbsp; &nbsp;&nbsp;</span>如果客户端在TIME_WAIT状态不等待一段时间,而是在发送完ACK报文后立即释放连接,那么就无法收到服务器重传的FIN+ACK报文段,因而也不会再发送一次确认报文。这样,<span style="color:rgb(255,0,0);">服务器就无法按照正常步骤进入CLOSED状态。</span></span><br><br><span style="font-family:Courier New;"><span style="font-family: 'Courier New';">&nbsp; &nbsp;&nbsp;</span>2)<span style="color:rgb(51,102,255);">防止已失效的连接请求报文段出现在本连接中</span>。客户端在发送完最后一个ACK确认报文段后,再经过时间2MSL,就可以使本连接持续的时间内所产生的所有报文段都从网络中消失。这样就可以使下一个新的连接中不会出现这种旧的连接请求报文段。</span><br><br><span style="font-family:Courier New;"><span style="font-family: 'Courier New';">&nbsp; &nbsp;&nbsp;</span>注意:服务器结束TCP连接的时间要比客户端早一些,因为客户机(最先提出close请求的一端)最后要等待2MSL后才可以进入CLOSED状态。</span><br><span style="font-family:Courier New;"><br></span><br><br>## <span style="color:rgb(255, 0, 0);"><span style="font-family:Courier New;">TCP如何保证可靠性</span></span><br><br><span style="font-family:Courier New;"><span style="color:rgb(51,102,255);"><span style="font-family: 'Courier New';">&nbsp; &nbsp;&nbsp;</span></span><span style="color:rgb(51,102,255);">序号</span>:&nbsp;TCP连接中传送的数据流中的<span style="color:rgb(0,0,128);">每一个字节都编上一个序号</span>。序号字段的值则指的是本报文段所发送的数据的第一个字节的序号;</span><br><br><span style="font-family:Courier New;"><span style="color:rgb(51,102,255);"><span style="font-family: 'Courier New';">&nbsp; &nbsp;&nbsp;</span></span><span style="color:rgb(51,102,255);">确认</span>:&nbsp;TCP首部的确认号是<span style="color:rgb(0,0,128);">期望收到对方的下一个报文段数据的第一个字节的序号</span>。当数据发送出去之后,&nbsp;发送方缓存区会继续存储那些已经发送但未收到确认的报文段,以便在需要的时候重传。TCP默认使用累计确认,即TCP只确认数据流中至第一个丢失字节为止的字节。</span><br><br><span style="font-family:Courier New;"><span style="color:rgb(51,102,255);"><span style="font-family: 'Courier New';">&nbsp; &nbsp;&nbsp;</span></span><span style="color:rgb(51,102,255);">重传</span>:&nbsp;有两种事件会导致TCP对报文段进行重传:<span style="color:rgb(0,0,128);">超时和冗余ACK</span>。</span><br><br><span style="font-family:Courier New;"><span style="font-family: 'Courier New';">&nbsp; &nbsp;&nbsp;</span><span style="font-family: 'Courier New';">&nbsp; &nbsp;&nbsp;</span>1)超时:&nbsp;TCP每发送一个报文段,就对这个报文段设置一次计时器。只要计时器设置的重传时间到期但还没有收到确认,就要重传这一报文段。</span><br><br><span style="font-family:Courier New;"><span style="font-family: 'Courier New';">&nbsp; &nbsp;&nbsp;</span><span style="font-family: 'Courier New';">&nbsp; &nbsp;&nbsp;</span>2)冗余ACK(冗余确认):&nbsp;冗余ACK就是再次确认某个报文段的ACK,而发送方先前已经收到过该报文段的确认;&nbsp;TCP规定当发送方收到对同一个报文段的<span style="color:rgb(0,0,128);">3个冗余ACK</span>时,就可以认为跟在这个被确认报文段之后的报文段已经丢失;</span><br><br><span style="font-family:Courier New;"><span style="color:rgb(51,102,255);"><span style="font-family: 'Courier New';">&nbsp; &nbsp;&nbsp;</span></span><span style="color:rgb(51,102,255);">校验</span>:&nbsp;TCP将保持它首部和数据的校验和。这是一个端到端的校验和,目的是检测数据在传输过程中的任何变化。如果收到段的校验和有差错,TCP将丢弃这个报文段并且不确认(导致对方超时重传);</span><br><br><span style="font-family:Courier New;"><span style="color:rgb(51,102,255);"><span style="font-family: 'Courier New';">&nbsp; &nbsp;&nbsp;</span></span><span style="color:rgb(51,102,255);">重排</span>:&nbsp;TCP承载于IP数据报来传输,而IP数据报的到达可能会失序,因此TCP报文段的到达也可能会失序。TCP将对收到的数据进行<span style="color:rgb(255,0,0);">重新排序</span>。IP数据报会发生重复,TCP的接收端会丢弃重复的数据。</span><br><br><span style="font-family:Courier New;"><span style="color:rgb(51,102,255);"><span style="font-family: 'Courier New';">&nbsp; &nbsp;&nbsp;</span></span><span style="color:rgb(51,102,255);">流量控制</span>:&nbsp;TCP还能提供流量控制。TCP连接的每一方都有一定大小的缓冲空间。</span><br><br><span style="font-family:Courier New;"><span style="color:rgb(51,102,255);"><span style="font-family: 'Courier New';">&nbsp; &nbsp;&nbsp;</span></span><span style="color:rgb(51,102,255);">分割</span>:&nbsp;应用数据被分割成TCP认为最适合发送的数据块,称为TCP报文段传递给IP层。</span><br><br><span style="font-family:Courier New;">&nbsp;</span><br><br>## <span style="color:rgb(255, 0, 0);"><span style="font-family:Courier New;">滑动窗口协议与停止等待协议的区别</span></span><br><br><span style="font-family:Courier New;"><span style="font-family: 'Courier New';">&nbsp; &nbsp;&nbsp;</span>滑动窗口协议中,允许<span style="color:rgb(0,0,255);">发送方发送多个分组</span>(当有多个分组可用时),&nbsp;<span style="color:rgb(0,0,255);">而不需等待确认</span>,但它受限于在流水线中未确认的分组数不能超过某个最大允许数N。</span><br><br><span style="font-family:Courier New;"><span style="font-family: 'Courier New';">&nbsp; &nbsp;&nbsp;</span>滑动窗口协议是TCP使用的一种控制流量的方法,此协议能够加速数据的传输。&nbsp;只有在接收窗口向前滑动时(与此同时也发送了确认),&nbsp;发送窗口才有可能向前滑动。收发两端的窗口按照以上规律不断地向前滑动,因此这种协议称为滑动窗口协议。</span><br><br><span style="font-family:Courier New;"><span style="color:rgb(0,0,255);"><span style="font-family: 'Courier New';">&nbsp; &nbsp;&nbsp;</span>当发送窗口和接收窗口的大小都等于1时</span><span style="color:rgb(0,0,255);">,</span><span style="color:rgb(0,0,255);">就是停止等待协议</span>。</span><br><span style="font-family:Courier New;"><br></span><br><br>## <span style="color:rgb(255, 0, 0);"><span style="font-family:Courier New;">TCP流量控制</span></span><br><br><span style="font-family:Courier New;"><span style="font-family: 'Courier New';">&nbsp; &nbsp;&nbsp;</span>TCP提供了流量控制服务以消除发送方使接收方缓存区溢出的可能性,因此可以说流量控制是一个<span style="color:rgb(0,0,255);">速度匹配服务(</span>匹配发送方的发送速率与接收方的读取速率)。</span><br><br><span style="font-family:Courier New;"><span style="font-family: 'Courier New';">&nbsp; &nbsp;&nbsp;</span>在通信过程中,接收方根据自己接收缓存的大小,动态地调整发送方的发送窗口大小,这就是接收窗口rwnd,即调整TCP报文段首部中的“窗口”字段值,来限制发送方向网络注入报文的速率。同时,发送方根据其对当前网络拥塞程序的估计而确定的窗口值,称为拥塞窗口cwnd,其大小与网络的带宽和时延密切相关。</span><br><br><span style="font-family:Courier New;">&nbsp;</span><br><br><span style="font-family:Courier New;font-size:18px;"><strong>滑动窗口</strong></span><br><br><span style="font-family:Courier New;"><span style="font-family: 'Courier New';">&nbsp; &nbsp;&nbsp;</span>TCP&nbsp;采用大小可变的滑动窗口进行流量控制(窗口大小的单位是字节),&nbsp;在&nbsp;TCP&nbsp;报文段首部的<span style="color:rgb(0,0,255);">窗口字段</span>写入的数值就是当前<span style="color:rgb(0,0,255);">给对方设置</span>的发送窗口数值的上限。</span><br><br><span style="font-family:Courier New;"><span style="font-family: 'Courier New';">&nbsp; &nbsp;&nbsp;</span>发送窗口在连接建立时由双方商定。但在通信的过程中,接收端可根据自己的资源情况,随时动态地调整对方的发送窗口上限值(可增大或减小)。</span><br><br><span style="font-family:Courier New;">&nbsp;</span><br><br><span style="font-family:Courier New;font-size:18px;"><strong>发送过程及详细分析</strong></span><br><br><span style="font-family:Courier New;"><span style="font-family: 'Courier New';">&nbsp; &nbsp;&nbsp;</span>1)发送端要发送&nbsp;900&nbsp;字节长的数据,划分为&nbsp;9&nbsp;个&nbsp;100&nbsp;字节长的报文段,而发送窗口确定为&nbsp;500&nbsp;字节。    发送端只要收到了对方的确认,发送窗口就可前移。发送&nbsp;TCP&nbsp;要维护一个指针。每发送一个报文段,指针就向前移动一个报文段的距离。</span><br><table cellpadding="0" cellspacing="0"></table>
+
+<p><span style="font-family:Courier New;">&nbsp;<img src="http://img.blog.csdn.net/20150408143602149?watermark/2/text/aHR0cDovL2Jsb2cuY3Nkbi5uZXQvempmMjgwNDQxNTg5/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70/gravity/Center" alt=""></span></p>
+<table cellpadding="0" cellspacing="0"></table>
+
+<p><span style="font-family:Courier New;"><span style="font-family: 'Courier New';">&nbsp; &nbsp;&nbsp;</span>2)发送端已发送了&nbsp;400&nbsp;字节的数据,但只收到对前&nbsp;200&nbsp;字节数据的确认,同时窗口大小不变。现在发送端还可发送&nbsp;300&nbsp;字节(401~700)。</span></p>
+<p><span style="font-family:Courier New;">&nbsp;<img src="http://img.blog.csdn.net/20150408143657136?watermark/2/text/aHR0cDovL2Jsb2cuY3Nkbi5uZXQvempmMjgwNDQxNTg5/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70/gravity/Center" alt=""></span></p>
+<p><span style="font-family:Courier New;"><span style="font-family: 'Courier New';">&nbsp; &nbsp;&nbsp;</span>3)发送端收到了对方对前&nbsp;400&nbsp;字节数据的确认,但对方通知发送端必须把窗口减小到&nbsp;400&nbsp;字节。现在发送端最多还可发送&nbsp;400&nbsp;字节(401~800)的数据。</span></p>
+<table cellpadding="0" cellspacing="0"></table>
+
+<p><span style="font-family:Courier New;">&nbsp;<img src="http://img.blog.csdn.net/20150408143621384?watermark/2/text/aHR0cDovL2Jsb2cuY3Nkbi5uZXQvempmMjgwNDQxNTg5/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70/gravity/Center" alt=""></span></p>
+<p><span style="font-family:Courier New;"><br></span></p>
+<p><span style="font-family:Courier New;font-size:18px;">利用可变窗口大小进行流量控制(双方确定的窗口值是&nbsp;400)</span><br><span style="font-family:Courier New;"><img src="http://img.blog.csdn.net/20150408143633240?watermark/2/text/aHR0cDovL2Jsb2cuY3Nkbi5uZXQvempmMjgwNDQxNTg5/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70/gravity/Center" alt=""></span><table cellpadding="0" cellspacing="0"></table></p>
+<p><span style="font-family:Courier New;">(101~200的数据发生丢失)</span><br><span style="font-family:Courier New;"><br></span></p>
+<h2 id="慢开始和拥塞避免"><span style="color:rgb(255, 0, 0);"><span style="font-family:Courier New;">慢开始和拥塞避免</span></span></h2><p><span style="font-family:Courier New;">1.&nbsp;发送端的主机在确定发送报文段的速率时,既要根据接收端的接收能力,又要从全局考虑不要使网络发生拥塞。因此,每一个&nbsp;TCP&nbsp;连接需要有以下两个状态变量:</span></p>
+<pre><code><span class="tag">&lt;<span class="title">span</span> <span class="attribute">style</span>=<span class="value">"font-family:Courier New;"</span>&gt;</span><span class="tag">&lt;<span class="title">span</span> <span class="attribute">style</span>=<span class="value">"color:rgb(0,0,255);"</span>&gt;</span><span class="tag">&lt;<span class="title">span</span> <span class="attribute">style</span>=<span class="value">"font-family: 'Courier New';"</span>&gt;</span>&amp;nbsp; &amp;nbsp;&amp;nbsp;<span class="tag">&lt;/<span class="title">span</span>&gt;</span>接收窗口&amp;nbsp;rwnd<span class="tag">&lt;/<span class="title">span</span>&gt;</span>&amp;nbsp;(receiver&amp;nbsp;window):&amp;nbsp;这是接收端根据其目前的接收缓存大小所许诺的最新的窗口值,是来自接收端的流量控制。接收端将此窗口值放在&amp;nbsp;TCP&amp;nbsp;报文的首部中的窗口字段,传送给发送端。<span class="tag">&lt;/<span class="title">span</span>&gt;</span>
+
+<span class="tag">&lt;<span class="title">span</span> <span class="attribute">style</span>=<span class="value">"font-family:Courier New;"</span>&gt;</span><span class="tag">&lt;<span class="title">span</span> <span class="attribute">style</span>=<span class="value">"color:rgb(0,0,255);"</span>&gt;</span><span class="tag">&lt;<span class="title">span</span> <span class="attribute">style</span>=<span class="value">"font-family: 'Courier New';"</span>&gt;</span>&amp;nbsp; &amp;nbsp;&amp;nbsp;<span class="tag">&lt;/<span class="title">span</span>&gt;</span>拥塞窗口&amp;nbsp;cwnd<span class="tag">&lt;/<span class="title">span</span>&gt;</span>&amp;nbsp;(congestion&amp;nbsp;window):&amp;nbsp;是<span class="tag">&lt;<span class="title">span</span> <span class="attribute">style</span>=<span class="value">"color:rgb(0,0,255);"</span>&gt;</span>发送端<span class="tag">&lt;/<span class="title">span</span>&gt;</span>根据自己估计的网络拥塞程度而设置的窗口值,是来自发送端的流量控制。<span class="tag">&lt;/<span class="title">span</span>&gt;</span>
+</code></pre><p><span style="font-family:Courier New;"><span style="font-family: 'Courier New';">&nbsp; &nbsp;&nbsp;</span>发送端的发送窗口的上限值应当取为接收端窗口&nbsp;rwnd&nbsp;和拥塞窗口&nbsp;cwnd&nbsp;这两个变量中较小的一个,即应按以下公式确定:</span></p>
+<p><span style="font-family:Courier New;">    <span style="font-family: 'Courier New';">&nbsp; &nbsp;&nbsp;</span><span style="font-family: 'Courier New';">&nbsp; &nbsp;<span style="color:#009900;">&nbsp;</span></span><span style="color:#009900;">发送窗口的上限值&nbsp;=&nbsp;Min(rwnd,&nbsp;cwnd)</span></span></p>
+<p><span style="font-family:Courier New;">&nbsp;</span></p>
+<p><span style="font-family:Courier New;font-size:18px;"><strong>2.&nbsp;慢开始算法</strong></span></p>
+<p><span style="font-family:Courier New;"><span style="font-family: 'Courier New';">&nbsp; &nbsp;&nbsp;</span>在TCP刚刚连接好,开始发送TCP报文段时,先令拥塞窗口<span style="color:rgb(0,0,255);">cwnd=1</span><span style="color:rgb(0,0,255);">,</span><span style="color:rgb(0,0,255);">即一个最大报文段长度MSS</span>。而在每收到一个对新的报文段的确认后,将cwnd加1,即增大一个MSS。用这样的方法逐步增大发送方的拥塞窗口cwnd,可以使分组注入到网络的速率更加合理。</span></p>
+<p><span style="font-family:Courier New;"><span style="font-family: 'Courier New';">&nbsp; &nbsp;&nbsp;</span>使用慢开始算法后,每经过一个传输轮次(即往返时延RTT),拥塞窗口cwnd就会<span style="color:rgb(0,0,255);">加倍</span>,即cwnd的大小呈<span style="color:rgb(0,0,255);">指数形式</span>增长(可以看出”慢开始”并不”慢”)。这样慢开始一直把拥塞窗口cwnd增大到一个规定的<span style="color:rgb(0,0,255);">慢开始门限ssthresh</span>(阈值),然后改用拥塞避免算法。</span></p>
+<p><span style="font-family:Courier New;">&nbsp;</span></p>
+<p><span style="font-family:Courier New;font-size:18px;"><strong>3.&nbsp;拥塞避免算法</strong></span></p>
+<p><span style="font-family:Courier New;"><span style="font-family: 'Courier New';">&nbsp; &nbsp;&nbsp;</span>发送端的拥塞窗口cwnd每经过一个往返时延RTT就增加一个MSS的大小,而不是加倍(不同于慢开始算法),使cwnd按线性规律缓慢增长(即<span style="color:rgb(0,0,255);">加法增大</span>),而当出现一次超时(网络拥塞)时,则令<span style="color:rgb(0,0,255);">慢开始门限ssthresh等于当前cwnd的一半</span><span style="color:rgb(0,0,255);">(</span><span style="color:rgb(0,0,255);">即乘法减小</span><span style="color:rgb(0,0,255);">)</span>。</span></p>
+<p><span style="font-family:Courier New;">根据cwnd的大小执行不同的算法,可归纳如下:</span></p>
+<p><span style="font-family:Courier New;"><span style="font-family: 'Courier New';">&nbsp; &nbsp;&nbsp;</span><span style="font-family: 'Courier New';">&nbsp; &nbsp;&nbsp;</span>当cwnd&lt;ssthresh时,使用慢开始算法。</span></p>
+<p><span style="font-family:Courier New;"><span style="font-family: 'Courier New';">&nbsp; &nbsp;&nbsp;</span><span style="font-family: 'Courier New';">&nbsp; &nbsp;&nbsp;</span>当cwnd&gt;ssthresh时,停止使用慢开始算法而改用拥塞避免算法。</span></p>
+<p><span style="font-family:Courier New;"><span style="font-family: 'Courier New';">&nbsp; &nbsp;&nbsp;</span><span style="font-family: 'Courier New';">&nbsp; &nbsp;&nbsp;</span>当cwnd=ssthresh时,既可使用慢开始算法,也可使用拥塞避免算法(通常做法)。</span></p>
+<p><span style="font-family:Courier New;">&nbsp;</span></p>
+<p><span style="font-family:Courier New;font-size:18px;"><strong>4.网络拥塞的处理</strong></span></p>
+<p><span style="font-family:Courier New;"><span style="font-family: 'Courier New';">&nbsp; &nbsp;&nbsp;</span>当网络出现拥塞时,无论在慢开始阶段还是在拥塞避免阶段,只要发送方检测到超时事件的发生(没有按时收到确认,重传计时器超时),就要把<span style="color:rgb(0,0,255);">慢开始门限ssthresh设置为出现拥塞时的发送方cwnd值的一半</span><span style="color:rgb(0,0,255);">(</span><span style="color:rgb(0,0,255);">但不能小于2</span><span style="color:rgb(0,0,255);">)</span>。然后把<span style="color:rgb(0,0,255);">拥塞窗口cwnd重新设置为1</span>,<span style="color:rgb(0,0,255);">执行慢开始算法</span>。这样做的目的就是要迅速减少主机发送到网络中的分组数,使得发生拥塞的路由器有足够时间把队列中积压的分组处理完毕。</span></p>
+<p><span style="font-family:Courier New;"><span style="font-family: 'Courier New';">&nbsp; &nbsp;&nbsp;</span>拥塞避免并非完全能避免拥塞。利用以上措施要完全避免网络拥塞是不可能的。拥塞避免是指在拥塞避免阶段把拥塞窗口控制为按线性规律增长,使网络比较不容易出现拥塞。</span></p>
+<p><span style="font-family:Courier New;"><span style="font-family: 'Courier New';">&nbsp; &nbsp;&nbsp;</span>慢开始和拥塞避免算法的实现过程如下图所示:</span><br><span style="font-family:Courier New;"><img src="http://img.blog.csdn.net/20150408143753545?watermark/2/text/aHR0cDovL2Jsb2cuY3Nkbi5uZXQvempmMjgwNDQxNTg5/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70/gravity/Center" alt=""></span><table cellpadding="0" cellspacing="0"></table></p>
+<p><span style="font-family:Courier New;">    <span style="font-family: 'Courier New';">&nbsp; &nbsp;&nbsp;</span>注意,在慢开始(指数级增长)阶段,若2<em>cwnd＞ssthresh,则下一个RTT的cwnd应等于ssthresh,而不是2</em>cwnd,即cwnd不能跃过ssthresh值。</span></p>
+<p><span style="font-family:Courier New;">&nbsp;</span></p>
+<p><span style="font-family:Courier New;">小结:</span></p>
+<p><span style="font-family:Courier New;"><span style="font-family: 'Courier New';">&nbsp; &nbsp;&nbsp;</span>在慢开始和拥塞避免算法中使用了“乘法减小”和“加法增大”方法。“乘法减小”是指不论在慢开始阶段还是拥塞避免阶段,只要出现一次超时(即很可能出现了网络拥塞),就把慢开始门限值ssthresh设置为当前的拥塞窗口值的一半。当网络频繁出现拥塞时,ssthresh值就下降得很快,以大大减少注入到网络中的分组数。而“加法增大”是指执行拥塞避免算法后,在收到对所有报文段的确认后(即经过一个RTT),就把拥塞窗口cwnd增加一个MSS大小,使拥塞窗口缓慢增大,以防止网络过早出现拥塞。</span><br><span style="font-family:Courier New;"><br></span></p>
+<h2 id="快重传与快恢复"><span style="color:rgb(255, 0, 0);"><span style="font-family:Courier New;">快重传与快恢复</span></span></h2><p><span style="font-family:Courier New;"><span style="font-family: 'Courier New';">&nbsp; &nbsp;&nbsp;</span>快重传和快恢复算法是对慢开始和拥塞避免算法的改进。</span></p>
+<p><span style="font-family:Courier New;">1.快重传</span></p>
+<p><span style="font-family:Courier New;"><span style="font-family: 'Courier New';">&nbsp; &nbsp;&nbsp;</span>当发送方<span style="color:rgb(0,0,255);">连续收到三个重复的ACK报文</span>时,直接重传对方尚未收到的报文段,而不必等待那个报文段设置的重传计时器超时。</span></p>
+<p><span style="font-family:Courier New;">&nbsp;</span></p>
+<p><span style="font-family:Courier New;">2.快恢复</span></p>
+<p><span style="font-family:Courier New;"><span style="font-family: 'Courier New';">&nbsp; &nbsp;&nbsp;</span>快恢复算法原理:当发送端收到连续<span style="color:rgb(0,0,255);">三个冗余ACK</span><span style="color:rgb(0,0,255);">(</span><span style="color:rgb(0,0,255);">即重复确认</span><span style="color:rgb(0,0,255);">)</span>时,就执行“乘法减小”算法,把慢开始门限ssthresh减半。与慢开始(慢开始算法将拥塞窗口cwnd设置为1)不同之处是它<span style="color:rgb(0,0,255);">把cwnd的值设置为慢开始门限ssthresh减半后的数值</span>,然后开始执行<span style="color:rgb(0,0,255);">拥塞避免算法</span><span style="color:rgb(0,0,255);">(</span><span style="color:rgb(0,0,255);">“加法增大”</span><span style="color:rgb(0,0,255);">)</span>,使拥塞窗口缓慢地线性增大。</span></p>
+<p><span style="font-family:Courier New;"><span style="font-family: 'Courier New';">&nbsp; &nbsp;&nbsp;</span>由于<span style="color:rgb(255,0,0);">跳过了cwnd从1起始的慢开始过程</span><span style="color:rgb(255,0,0);">(因为既然现在能够收到三个重复ACK确认,&nbsp;就说明拥塞程序并不是很大)</span>,所以被称为快恢复。快恢复算法的实现过程如下图所示,作为对比,虚线为慢开始的处理过程。</span></p>
+<p><span style="font-family:Courier New;">&nbsp;<img src="http://img.blog.csdn.net/20150408143737075?watermark/2/text/aHR0cDovL2Jsb2cuY3Nkbi5uZXQvempmMjgwNDQxNTg5/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70/gravity/Center" alt=""></span></p>
+<p><span style="font-family:Courier New;">&nbsp;</span></p>
+<p><span style="font-family:Courier New;">&nbsp;</span></p>
+<p><span style="font-family:Courier New;"><span style="font-family: 'Courier New'; font-size: 12px;">&nbsp; &nbsp;&nbsp;</span>注-发送方发送窗口的实际大小由<span style="color:rgb(255,0,0);">流量控制</span>和<span style="color:rgb(255,0,0);">拥塞控制</span>共同决定。因此,当同时出现了接收端窗口(rwnd)和拥塞窗口(cwnd)时,发送方实际的发送窗口大小是由rwnd和cwnd中较小的那一个确定的。</span></p>
+<p></p>
+<p>原文转载自汗青ZJF <a href="http://blog.csdn.net/zjf280441589/article/category/1854365" target="_blank" rel="external">http://blog.csdn.net/zjf280441589/article/category/1854365</a></p>
+
+      
+    </div>
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/source/tags/TCP-IP/" rel="tag">#TCP/IP</a>
+          
+            <a href="/source/tags/传输层/" rel="tag">#传输层</a>
+          
+            <a href="/source/tags/计算机网络/" rel="tag">#计算机网络</a>
+          
+        </div>
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2017/TCPIP入门(2)--网络层/" rel="next" title="TCP/IP入门(2) --网络层">
+                <i class="fa fa-chevron-left"></i> TCP/IP入门(2) --网络层
+              </a>
+            
+          </div>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2017/TCPIP入门(4)--应用层/" rel="prev" title="TCP/IP入门(4) --应用层">
+                TCP/IP入门(4) --应用层 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </article>
+
+
+
+    <div class="post-spread">
+      
+        <div class="ds-share flat" data-thread-key="2017/TCPIP入门(3)--传输层/"
+     data-title="TCP/IP入门(3) --传输层"
+     data-content=""
+     data-url="http://yoursite.com/2017/TCPIP入门(3)--传输层/">
+  <div class="ds-share-inline">
+    <ul  class="ds-share-icons-16">
+
+      <li data-toggle="ds-share-icons-more"><a class="ds-more" href="javascript:void(0);">分享到：</a></li>
+      <li><a class="ds-weibo" href="javascript:void(0);" data-service="weibo">微博</a></li>
+      <li><a class="ds-qzone" href="javascript:void(0);" data-service="qzone">QQ空间</a></li>
+      <li><a class="ds-qqt" href="javascript:void(0);" data-service="qqt">腾讯微博</a></li>
+      <li><a class="ds-wechat" href="javascript:void(0);" data-service="wechat">微信</a></li>
+
+    </ul>
+    <div class="ds-share-icons-more">
+    </div>
+  </div>
+</div>
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+  <div class="comments" id="comments">
+    
+      <div class="ds-thread" data-thread-key="2017/TCPIP入门(3)--传输层/"
+           data-title="TCP/IP入门(3) --传输层" data-url="http://yoursite.com/2017/TCPIP入门(3)--传输层/">
+      </div>
+    
+  </div>
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview sidebar-panel ">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+          <img class="site-author-image" itemprop="image"
+               src="/images/avatar.jpg"
+               alt="Mr.Zhang" />
+          <p class="site-author-name" itemprop="name">Mr.Zhang</p>
+          <p class="site-description motion-element" itemprop="description">伟大的工作，并不是用力量而是用耐心去完成的。 —— 约翰逊</p>
+        </div>
+        <nav class="site-state motion-element">
+          <div class="site-state-item site-state-posts">
+            <a href="/archives">
+              <span class="site-state-item-count">12</span>
+              <span class="site-state-item-name">日志</span>
+            </a>
+          </div>
+          
+          
+            <div class="site-state-item site-state-categories">
+              <a href="/categories">
+                <span class="site-state-item-count">4</span>
+                <span class="site-state-item-name">分类</span>
+              </a>
+            </div>
+          
+
+          
+            <div class="site-state-item site-state-tags">
+              <a href="/tags">
+                <span class="site-state-item-count">12</span>
+                <span class="site-state-item-name">标签</span>
+              </a>
+            </div>
+          
+
+        </nav>
+
+        
+
+        <div class="links-of-author motion-element">
+          
+            
+              <span class="links-of-author-item">
+                <a href="https://github.com/zhangxiaochen" target="_blank">
+                  
+                    <i class="fa fa-github"></i> GitHub
+                  
+                </a>
+              </span>
+            
+          
+        </div>
+
+        
+        
+
+        <div class="links-of-author motion-element">
+          
+        </div>
+
+      </section>
+
+      
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc-indicator-top post-toc-indicator">
+            <i class="fa fa-angle-double-up"></i>
+          </div>
+          <div class="post-toc">
+            
+              
+            
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#传输层的主要功能"><span class="nav-number">1.</span> <span class="nav-text">传输层的主要功能</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#TCP VS UDP"><span class="nav-number">2.</span> <span class="nav-text">TCP VS UDP</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#TCP报文段"><span class="nav-number">3.</span> <span class="nav-text">TCP报文段</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#慢开始和拥塞避免"><span class="nav-number">4.</span> <span class="nav-text">慢开始和拥塞避免</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#快重传与快恢复"><span class="nav-number">5.</span> <span class="nav-text">快重传与快恢复</span></a></li></ol></div>
+            
+          </div>
+          <div class="post-toc-indicator-bottom post-toc-indicator">
+            <i class="fa fa-angle-double-down"></i>
+          </div>
+        </section>
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright" >
+  
+  &copy;  2015 - 
+  <span itemprop="copyrightYear">2017</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Mr.Zhang</span>
+</div>
+
+<div class="powered-by">
+  由 <a class="theme-link" href="http://hexo.io">Hexo</a> 强力驱动
+</div>
+
+<div class="theme-info">
+  主题 -
+  <a class="theme-link" href="https://github.com/iissnan/hexo-theme-next">
+    NexT.Mist
+  </a>
+</div>
+
+
+
+      </div>
+    </footer>
+
+    <div class="back-to-top"></div>
+  </div>
+
+  
+
+
+  
+
+
+
+  <script type="text/javascript" src="/vendors/jquery/index.js?v=2.1.3"></script>
+
+  <script type="text/javascript" src="/vendors/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+
+  <script type="text/javascript" src="/vendors/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+
+  <script type="text/javascript" src="/vendors/velocity/velocity.min.js"></script>
+
+  <script type="text/javascript" src="/vendors/velocity/velocity.ui.min.js"></script>
+
+  <script type="text/javascript" src="/vendors/fancybox/source/jquery.fancybox.pack.js"></script>
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=0.5.0"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=0.5.0"></script>
+
+
+
+  
+  
+
+  
+  
+<script type="text/javascript" src="/js/src/scrollspy.js?v=0.5.0"></script>
+
+<script type="text/javascript" id="sidebar.toc.highlight">
+  $(document).ready(function () {
+    var tocSelector = '.post-toc';
+    var $tocSelector = $(tocSelector);
+    var activeCurrentSelector = '.active-current';
+
+    $tocSelector
+      .on('activate.bs.scrollspy', function () {
+        var $currentActiveElement = $(tocSelector + ' .active').last();
+
+        removeCurrentActiveClass();
+        $currentActiveElement.addClass('active-current');
+
+        $tocSelector[0].scrollTop = $currentActiveElement.position().top;
+      })
+      .on('clear.bs.scrollspy', function () {
+        removeCurrentActiveClass();
+      });
+
+    function removeCurrentActiveClass () {
+      $(tocSelector + ' ' + activeCurrentSelector)
+        .removeClass(activeCurrentSelector.substring(1));
+    }
+
+    function processTOC () {
+      getTOCMaxHeight();
+      toggleTOCOverflowIndicators();
+    }
+
+    function getTOCMaxHeight () {
+      var height = $('.sidebar').height() -
+                   $tocSelector.position().top -
+                   $('.post-toc-indicator-bottom').height();
+
+      $tocSelector.css('height', height);
+
+      return height;
+    }
+
+    function toggleTOCOverflowIndicators () {
+      tocOverflowIndicator(
+        '.post-toc-indicator-top',
+        $tocSelector.scrollTop() > 0 ? 'show' : 'hide'
+      );
+
+      tocOverflowIndicator(
+        '.post-toc-indicator-bottom',
+        $tocSelector.scrollTop() >= $tocSelector.find('ol').height() - $tocSelector.height() ? 'hide' : 'show'
+      )
+    }
+
+    $(document).on('sidebar.motion.complete', function () {
+      processTOC();
+    });
+
+    $('body').scrollspy({ target: tocSelector });
+    $(window).on('resize', function () {
+      if ( $('.sidebar').hasClass('sidebar-active') ) {
+        processTOC();
+      }
+    });
+
+    onScroll($tocSelector);
+
+    function onScroll (element) {
+      element.on('mousewheel DOMMouseScroll', function (event) {
+          var oe = event.originalEvent;
+          var delta = oe.wheelDelta || -oe.detail;
+
+          this.scrollTop += ( delta < 0 ? 1 : -1 ) * 30;
+          event.preventDefault();
+
+          toggleTOCOverflowIndicators();
+      });
+    }
+
+    function tocOverflowIndicator (indicator, action) {
+      var $indicator = $(indicator);
+      var opacity = action === 'show' ? 1 : 0;
+      $indicator.velocity ?
+        $indicator.velocity('stop').velocity({
+          opacity: opacity
+        }, { duration: 100 }) :
+        $indicator.stop().animate({
+          opacity: opacity
+        }, 100);
+    }
+
+  });
+</script>
+
+<script type="text/javascript" id="sidebar.nav">
+  $(document).ready(function () {
+    var html = $('html');
+    var TAB_ANIMATE_DURATION = 200;
+    var hasVelocity = $.isFunction(html.velocity);
+
+    $('.sidebar-nav li').on('click', function () {
+      var item = $(this);
+      var activeTabClassName = 'sidebar-nav-active';
+      var activePanelClassName = 'sidebar-panel-active';
+      if (item.hasClass(activeTabClassName)) {
+        return;
+      }
+
+      var currentTarget = $('.' + activePanelClassName);
+      var target = $('.' + item.data('target'));
+
+      hasVelocity ?
+        currentTarget.velocity('transition.slideUpOut', TAB_ANIMATE_DURATION, function () {
+          target
+            .velocity('stop')
+            .velocity('transition.slideDownIn', TAB_ANIMATE_DURATION)
+            .addClass(activePanelClassName);
+        }) :
+        currentTarget.animate({ opacity: 0 }, TAB_ANIMATE_DURATION, function () {
+          currentTarget.hide();
+          target
+            .stop()
+            .css({'opacity': 0, 'display': 'block'})
+            .animate({ opacity: 1 }, TAB_ANIMATE_DURATION, function () {
+              currentTarget.removeClass(activePanelClassName);
+              target.addClass(activePanelClassName);
+            });
+        });
+
+      item.siblings().removeClass(activeTabClassName);
+      item.addClass(activeTabClassName);
+    });
+
+    $('.post-toc a').on('click', function (e) {
+      e.preventDefault();
+      var targetSelector = NexT.utils.escapeSelector(this.getAttribute('href'));
+      var offset = $(targetSelector).offset().top;
+      hasVelocity ?
+        html.velocity('stop').velocity('scroll', {
+          offset: offset  + 'px',
+          mobileHA: false
+        }) :
+        $('html, body').stop().animate({
+          scrollTop: offset
+        }, 500);
+    });
+
+    // Expand sidebar on post detail page by default, when post has a toc.
+    NexT.motion.middleWares.sidebar = function () {
+      var $tocContent = $('.post-toc-content');
+
+      if (CONFIG.sidebar.display === 'post' || CONFIG.sidebar.display === 'always') {
+        if ($tocContent.length > 0 && $tocContent.html().trim().length > 0) {
+          NexT.utils.displaySidebar();
+        }
+      }
+    };
+  });
+</script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=0.5.0"></script>
+
+
+
+  
+
+  
+    
+  
+
+  <script type="text/javascript">
+    var duoshuoQuery = {short_name:"zhangxiaochen"};
+    (function() {
+      var ds = document.createElement('script');
+      ds.type = 'text/javascript';ds.async = true;
+      ds.id = 'duoshuo-script';
+      ds.src = (document.location.protocol == 'https:' ? 'https:' : 'http:') + '//static.duoshuo.com/embed.js';
+      ds.charset = 'UTF-8';
+      (document.getElementsByTagName('head')[0]
+      || document.getElementsByTagName('body')[0]).appendChild(ds);
+    })();
+  </script>
+
+  
+    
+  
+
+
+
+
+
+  
+  
+
+  
+  
+
+
+</body>
+</html>

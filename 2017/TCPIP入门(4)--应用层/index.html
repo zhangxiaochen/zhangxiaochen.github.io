@@ -1,0 +1,872 @@
+<!doctype html>
+
+
+
+  
+
+
+<html class="theme-next mist use-motion">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+  <link href="/vendors/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css"/>
+
+
+
+
+
+
+<link href="/vendors/font-awesome/css/font-awesome.min.css?v=4.4.0" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=0.5.0" rel="stylesheet" type="text/css" />
+
+
+  <meta name="keywords" content="TCP/IP,应用层,计算机网络," />
+
+
+
+
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=0.5.0" />
+
+
+
+
+
+
+<meta name="description" content="看到一篇非常棒的系统讲解TCP/IP协议的博客，转载过来自己整理下。
+TCP/IP中的应用层
+&amp;nbsp;
+DNS简介&amp;nbsp; &amp;nbsp; 域名系统是基于描述名字-地址映射的分布式计算机系统的实现,其作用是提供主机名和IP&amp;nbsp;地址间的映射关系。
+&amp;nbsp; &amp;nbsp;&amp;nbsp;名字到IP地址的解析是由若干个域名Server组成的,&amp;nbsp;域名Server程序在专设的结点上运">
+<meta property="og:type" content="article">
+<meta property="og:title" content="TCP/IP入门(4) --应用层">
+<meta property="og:url" content="http://yoursite.com/2017/TCPIP入门(4)--应用层/index.html">
+<meta property="og:site_name" content="Mr.Zhang's Coding Life">
+<meta property="og:description" content="看到一篇非常棒的系统讲解TCP/IP协议的博客，转载过来自己整理下。
+TCP/IP中的应用层
+&amp;nbsp;
+DNS简介&amp;nbsp; &amp;nbsp; 域名系统是基于描述名字-地址映射的分布式计算机系统的实现,其作用是提供主机名和IP&amp;nbsp;地址间的映射关系。
+&amp;nbsp; &amp;nbsp;&amp;nbsp;名字到IP地址的解析是由若干个域名Server组成的,&amp;nbsp;域名Server程序在专设的结点上运">
+<meta property="og:image" content="http://img.blog.csdn.net/20150408145245992?watermark/2/text/aHR0cDovL2Jsb2cuY3Nkbi5uZXQvempmMjgwNDQxNTg5/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70/gravity/Center">
+<meta property="og:image" content="http://img.blog.csdn.net/20150408145312702?watermark/2/text/aHR0cDovL2Jsb2cuY3Nkbi5uZXQvempmMjgwNDQxNTg5/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70/gravity/Center">
+<meta property="og:image" content="http://img.blog.csdn.net/20150408145418656?watermark/2/text/aHR0cDovL2Jsb2cuY3Nkbi5uZXQvempmMjgwNDQxNTg5/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70/gravity/Center">
+<meta property="og:image" content="http://img.blog.csdn.net/20150408145358192?watermark/2/text/aHR0cDovL2Jsb2cuY3Nkbi5uZXQvempmMjgwNDQxNTg5/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70/gravity/Center">
+<meta property="og:image" content="http://img.blog.csdn.net/20150408145454895?watermark/2/text/aHR0cDovL2Jsb2cuY3Nkbi5uZXQvempmMjgwNDQxNTg5/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70/gravity/Center">
+<meta property="og:image" content="http://img.blog.csdn.net/20150408145422091?watermark/2/text/aHR0cDovL2Jsb2cuY3Nkbi5uZXQvempmMjgwNDQxNTg5/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70/gravity/Center">
+<meta property="og:image" content="http://img.blog.csdn.net/20150408145500498?watermark/2/text/aHR0cDovL2Jsb2cuY3Nkbi5uZXQvempmMjgwNDQxNTg5/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70/gravity/Center">
+<meta property="og:image" content="http://img.blog.csdn.net/20150408145619775?watermark/2/text/aHR0cDovL2Jsb2cuY3Nkbi5uZXQvempmMjgwNDQxNTg5/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70/gravity/Center">
+<meta property="og:updated_time" content="2017-04-23T14:41:46.511Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="TCP/IP入门(4) --应用层">
+<meta name="twitter:description" content="看到一篇非常棒的系统讲解TCP/IP协议的博客，转载过来自己整理下。
+TCP/IP中的应用层
+&amp;nbsp;
+DNS简介&amp;nbsp; &amp;nbsp; 域名系统是基于描述名字-地址映射的分布式计算机系统的实现,其作用是提供主机名和IP&amp;nbsp;地址间的映射关系。
+&amp;nbsp; &amp;nbsp;&amp;nbsp;名字到IP地址的解析是由若干个域名Server组成的,&amp;nbsp;域名Server程序在专设的结点上运">
+
+
+
+<script type="text/javascript" id="hexo.configuration">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    scheme: 'Mist',
+    sidebar: {"position":"left","display":"post"},
+    fancybox: true,
+    motion: true,
+    duoshuo: {
+      userId: 0,
+      author: '博主'
+    }
+  };
+</script>
+
+  <title> TCP/IP入门(4) --应用层 | Mr.Zhang's Coding Life </title>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+
+
+
+  <script type="text/javascript">
+    var _hmt = _hmt || [];
+    (function() {
+      var hm = document.createElement("script");
+      hm.src = "//hm.baidu.com/hm.js?7ccda0d578d22c62e4a93038a6095937";
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(hm, s);
+    })();
+  </script>
+
+
+
+
+
+
+  
+  
+    
+  
+
+  <div class="container one-collumn sidebar-position-left page-post-detail ">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-meta ">
+  
+
+  <div class="custom-logo-site-title">
+    <a href="/"  class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <span class="site-title">Mr.Zhang's Coding Life</span>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+  </div>
+  <p class="site-subtitle">张先生的成长日记</p>
+</div>
+
+<div class="site-nav-toggle">
+  <button>
+    <span class="btn-bar"></span>
+    <span class="btn-bar"></span>
+    <span class="btn-bar"></span>
+  </button>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu ">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-home fa-fw"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories" rel="section">
+            
+              <i class="menu-item-icon fa fa-th fa-fw"></i> <br />
+            
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives" rel="section">
+            
+              <i class="menu-item-icon fa fa-archive fa-fw"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags" rel="section">
+            
+              <i class="menu-item-icon fa fa-tags fa-fw"></i> <br />
+            
+            标签
+          </a>
+        </li>
+      
+
+      
+      
+      
+    </ul>
+  
+
+  
+</nav>
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                TCP/IP入门(4) --应用层
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            <span class="post-meta-item-icon">
+              <i class="fa fa-calendar-o"></i>
+            </span>
+            <span class="post-meta-item-text">发表于</span>
+            <time itemprop="dateCreated" datetime="2017-04-21T11:00:00+08:00" content="2017-04-21">
+              2017-04-21
+            </time>
+          </span>
+
+          
+            <span class="post-category" >
+              &nbsp; | &nbsp;
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+              
+                <span itemprop="about" itemscope itemtype="https://schema.org/Thing">
+                  <a href="/source/categories/计算机网络/" itemprop="url" rel="index">
+                    <span itemprop="name">计算机网络</span>
+                  </a>
+                </span>
+
+                
+                
+
+              
+            </span>
+          
+
+          
+            
+              <span class="post-comments-count">
+                &nbsp; | &nbsp;
+                <a href="/2017/TCPIP入门(4)--应用层/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count ds-thread-count" data-thread-key="2017/TCPIP入门(4)--应用层/" itemprop="commentsCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+
+          
+          
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <p>看到一篇非常棒的系统讲解TCP/IP协议的博客，转载过来自己整理下。</p>
+<p><span style="font-family:Courier New;font-size:18px;"><strong>TCP/IP中的应用层</strong></span><br><span style="font-family:Courier New;"><img src="http://img.blog.csdn.net/20150408145245992?watermark/2/text/aHR0cDovL2Jsb2cuY3Nkbi5uZXQvempmMjgwNDQxNTg5/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70/gravity/Center" alt=""></span><table cellpadding="0" cellspacing="0"></table></p>
+<p><span style="font-family:Courier New;">&nbsp;</span></p>
+<h2 id="DNS简介"><span style="color:rgb(255, 0, 0);"><span style="font-family:Courier New;">DNS简介</span></span></h2><p><span style="font-family:Courier New;">&nbsp; &nbsp; 域名系统是基于描述<span style="color:rgb(0,0,255);">名字-地址映射</span>的分布式计算机系统的实现,其作用是提供<span style="color:rgb(0,0,255);">主机名和IP&nbsp;地址间的映射关系</span>。</span></p>
+<p><span style="font-family:Courier New;">&nbsp; &nbsp;&nbsp;名字到IP地址的解析是由若干个域名Server组成的,&nbsp;域名Server程序在专设的结点上运行,&nbsp;运行这些程序的机器成为域名服务器(Domain&nbsp;Server);</span></p>
+<p><span style="font-family:Courier New;">&nbsp;</span></p>
+<p><span style="font-family:Courier New;font-size:18px;"><strong>1)层次域名空间</strong></span></p>
+<p><span style="font-family:Courier New;">&nbsp;<img src="http://img.blog.csdn.net/20150408145312702?watermark/2/text/aHR0cDovL2Jsb2cuY3Nkbi5uZXQvempmMjgwNDQxNTg5/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70/gravity/Center" alt=""></span></p>
+<p><span style="font-family:Courier New;">&nbsp; &nbsp;&nbsp;Internet采用了层次树状结构的命名方法,&nbsp;任何一个连接在因特网上的主机或路由器都有一个唯一的层次结构的名字,&nbsp;即域名;</span></p>
+<p><span style="font-family:Courier New;">&nbsp; &nbsp;&nbsp;域名的结构由标号序列组成,&nbsp;各标号之间用点分隔开:</span></p>
+<p><span style="background:rgb(217,217,217);"><span style="font-family:Courier New;">&nbsp; &nbsp;&nbsp;…&nbsp;.&nbsp;三级域名&nbsp;.&nbsp;二级域名&nbsp;.&nbsp;顶级域名</span></span></p>
+<p><span style="font-family:Courier New;">    &nbsp; &nbsp;&nbsp;各标号分别代表不同级别的域名;</span></p>
+<p><span style="font-family:Courier New;">&nbsp; &nbsp;&nbsp;域名只是个逻辑概念,&nbsp;并不代表计算机的物理位置,&nbsp;变长的域名和使用有助于记忆的字符串来便于人们使用.&nbsp;而IP地址是定长的32位二进制数字则非常便于计算机处理;</span></p>
+<p><span style="font-family:Courier New;">&nbsp;</span></p>
+<p><span style="font-family:Courier New;font-size:18px;"><strong>2)域名服务器</strong></span><br><span style="font-family:Courier New;"><img src="http://img.blog.csdn.net/20150408145418656?watermark/2/text/aHR0cDovL2Jsb2cuY3Nkbi5uZXQvempmMjgwNDQxNTg5/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70/gravity/Center" alt=""></span><table cellpadding="0" cellspacing="0"></table></p>
+<p><span style="font-family:Courier New;">    &nbsp; &nbsp;&nbsp;负责域名到IP地址的解析。使用TCP与UDP端口号都是53,主要使用UDP,服务器之间备份使用TCP。</span></p>
+<p><span style="font-family:Courier New;">&nbsp;</span></p>
+<p><span style="font-family:Courier New;font-size:18px;">域名服务器的四种类型</span></p>
+<p><span style="font-family:Courier New;">    &nbsp; &nbsp;&nbsp;1)根域名服务器:&nbsp;最高层次的域名服务器。记录着<span style="color:rgb(0,0,255);">所有的顶级域名服务器的域名和IP地址</span>。不管是哪一个本地域名服务器,若要对因特网上任何一个域名进行解析,只要自己无法解析,就首先求助于根域名服务器。在因特网上共有13组根域名服务器;</span></p>
+<p><span style="font-family:Courier New;">    &nbsp; &nbsp;&nbsp;2)顶级域名服务器:&nbsp;负责管理在该顶级域名服务器注册的<span style="color:rgb(0,0,255);">所有二级域名</span>。当收到&nbsp;DNS&nbsp;查询请求时,就给出相应的回答(可能是最后的结果,也可能是下一步应当找的域名服务器的&nbsp;IP&nbsp;地址)。</span></p>
+<p><span style="font-family:Courier New;">    &nbsp; &nbsp;&nbsp;3)权限域名服务器:&nbsp;是负责一个区域的域名服务器。当一个权限域名服务器还不能给出最后的查询回答时,就会告诉发出查询请求的DNS客户,下一步应当找<span style="color:rgb(0,0,255);">哪一个权限域名服务器</span>。</span></p>
+<p><span style="font-family:Courier New;">    &nbsp; &nbsp;&nbsp;4)本地域名服务器:&nbsp;当一个主机发出&nbsp;DNS查询请求时,这个查询请求报文就发送给本地域名服务器。每一个因特网服务提供者ISP,或一个大学,甚至一个大学里的系,都可以拥有一个本地域名服务器,这种域名服务器有时也称为<span style="color:rgb(0,0,255);">默认域名服务器</span>。</span></p>
+<p><span style="font-family:Courier New;">&nbsp;</span></p>
+<p><span style="font-family:Courier New;font-size:18px;"><strong>3)域名的解析过程&nbsp;</strong></span></p>
+<p><span style="font-family:Courier New;">    &nbsp; &nbsp;&nbsp;(1)客户应用程序调用客户端一个称为解析器的库函数,将目的主机的域名作为参数传给解析器;</span></p>
+<p><span style="font-family:Courier New;">&nbsp; &nbsp;&nbsp;(2)解析器通过网络向本地域名服务器53号端口发送一个以UDP数据报封装的&nbsp;DNS&nbsp;请求报文,询问与该域名对应的IP地址;</span></p>
+<p><span style="font-family:Courier New;">    &nbsp; &nbsp;&nbsp;(3)本地域名服务器查找自己的域名数据库(映射文件),将域名对应的IP地址组成一个以&nbsp;UDP&nbsp;数据报封装的&nbsp;DNS&nbsp;响应报文,返回给解析器;若在本地域名数据库中查不到,则此域名服务器就暂时<span style="color:rgb(0,0,255);">成为全球&nbsp;DNS&nbsp;中的一个客户</span><span style="color:rgb(0,0,255);">,</span><span style="color:rgb(0,0,255);">并向其它域名服务器发出查询请求</span><span style="color:rgb(0,0,255);">,</span><span style="color:rgb(0,0,255);">直至找到能回答请求的域名服务器为止</span><span style="color:rgb(0,0,255);">,</span><span style="color:rgb(0,0,255);">并将解析结果响应给本地域名服务器</span>;本地域名服务器再将解析结果返回给客户端解析器;</span></p>
+<p><span style="font-family:Courier New;">    &nbsp; &nbsp;&nbsp;(4)客户端解析器最终收到响应报文后,再将解析得到的IP地址返回给应用程序。</span></p>
+<p><span style="font-family:Courier New;">&nbsp;</span></p>
+<p><span style="font-family:Courier New;font-size:18px;">三种查询方式：</span></p>
+<p><span style="font-family:Courier New;">1)迭代查询</span><br><span style="font-family:Courier New;"><img src="http://img.blog.csdn.net/20150408145358192?watermark/2/text/aHR0cDovL2Jsb2cuY3Nkbi5uZXQvempmMjgwNDQxNTg5/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70/gravity/Center" alt=""></span><table cellpadding="0" cellspacing="0"></table></p>
+<p><span style="font-family:Courier New;">    2)递归查询(少用)</span></p>
+<table cellpadding="0" cellspacing="0"></table>
+
+<p><span style="font-family:Courier New;">    <img src="http://img.blog.csdn.net/20150408145454895?watermark/2/text/aHR0cDovL2Jsb2cuY3Nkbi5uZXQvempmMjgwNDQxNTg5/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70/gravity/Center" alt=""></span></p>
+<p><span style="font-family:Courier New;">3)递归与迭代相结合(常用)</span><br><span style="font-family:Courier New;"><img src="http://img.blog.csdn.net/20150408145422091?watermark/2/text/aHR0cDovL2Jsb2cuY3Nkbi5uZXQvempmMjgwNDQxNTg5/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70/gravity/Center" alt=""></span><table cellpadding="0" cellspacing="0"></table></p>
+<p><span style="font-family:Courier New;">&nbsp;</span></p>
+<p><span style="font-family:Courier New;">&nbsp;</span></p>
+<p><span style="font-family:Courier New;font-size:18px;"><strong>4)域名高速缓存</strong></span></p>
+<p><span style="font-family:Courier New;">&nbsp; &nbsp;&nbsp;每个域名服务器都维护一个高速缓存,<span style="color:rgb(0,0,255);">存放最近用过的名字以及从何处获得名字映射信息的记录</span>。可大大减轻根域名服务器的负荷,使因特网上的&nbsp;DNS&nbsp;查询请求和回答报文的数量大为减少。&nbsp;</span></p>
+<p><span style="font-family:Courier New;">    &nbsp; &nbsp;&nbsp;为保持高速缓存中的内容正确,域名服务器应为每项内容设置计时器,并处理超过合理时间的项。当权限域名服务器回答一个查询请求时,在响应报文中都指明绑定有效存在的时间值。</span><br><span style="font-family:Courier New;"><br></span></p>
+<h2 id="FTP"><span style="color:rgb(255, 0, 0);"><span style="font-family:Courier New;">FTP</span></span></h2><p><span style="font-family:Courier New;">&nbsp; &nbsp;&nbsp;FTP(File&nbsp;Transfer&nbsp;Protocol,文件传输协议)使用客户/服务器模式。一个&nbsp;FTP&nbsp;服务器进程可同时为多个客户进程提供服务。FTP&nbsp;的服务器进程由两大部分组成：一个主进程,负责接受新的请求;另外有若干个从属进程,<span style="color:rgb(0,0,255);">每个</span><span style="color:rgb(0,0,255);">从属进程</span><span style="color:rgb(0,0,255);">负责为一个客户进行FTP服务</span>。</span></p>
+<p><span style="font-family:Courier New;">&nbsp; &nbsp;&nbsp;FTP&nbsp;使用两条TCP连接来完成文件传输,一条是<span style="color:rgb(0,0,255);">控制连接</span>,另一条是<span style="color:rgb(0,0,255);">数据连接</span>。平时控制链接总在端口21等待客户的连接请求,当用户需要传输文件时,客户首先主动与服务器端口21建立一个控制连接,用来传送客户的<span style="color:rgb(0,0,255);">命令和服务器的应答</span>。客户还会告知服务器自己将用的数据端口号,&nbsp;<span style="color:rgb(51,102,255);">控制链接</span><span style="color:rgb(51,102,255);">会一直保持到客户与服务器FTP全部通信结束为止</span>。</span></p>
+<p><span style="font-family:Courier New;">&nbsp; &nbsp;&nbsp;当客户发出<span style="color:rgb(0,0,255);">文件下载</span>、<span style="color:rgb(0,0,255);">文件上传</span>、<span style="color:rgb(0,0,255);">列目录的数据传输请求</span>时,服务器端口20主动与客户端告知的数据端口建立<span style="color:rgb(0,0,255);">数据连接</span>,并在其上传输数据,在<span style="color:rgb(51,102,255);">该次数据传输完毕后立即关闭数据传输连接</span>。</span></p>
+<p><span style="font-family:Courier New;">&nbsp; &nbsp;&nbsp;使用两个连接一方面使协议更加简单和更容易实现;另一方面在传输文件时还可以同时利用控制连接与服务器进行交互(如客户发送请求终止文件传输)。</span></p>
+<p><span style="font-family:Courier New;">&nbsp; &nbsp;&nbsp;关于FTP服务器的详细配置信息,请参考我的博客</span></p>
+<p><a href="http://blog.csdn.net/zjf280441589/article/details/18868343" target="_blank" rel="external"><span style="color:rgb(128, 0, 128);"><span style="font-family:Courier New;">&nbsp; &nbsp;&nbsp;http://blog.csdn.net/zjf280441589/article/details/18868343</span></span></a></p>
+<p><span style="font-family:Courier New;">&nbsp;</span></p>
+<p><span style="font-family:Courier New;font-size:18px;"><strong>TFTP</strong></span></p>
+<p><span style="font-family:Courier New;">&nbsp; &nbsp;&nbsp;TFTP(Trivial&nbsp;File&nbsp;Transfer&nbsp;Protocol,简单文件传输协议)也是用于在远端服务器和本地主机之间传输文件的,相对于FTP,TFTP没有复杂的交互存取接口和认证控制,适用于客户端和服务器之间不需要复杂交互的环境。TFTP协议的运行基于UDP协议,使用UDP端口69进行数据传输。</span></p>
+<p><span style="font-family:Courier New;">&nbsp;</span></p>
+<table><tbody><tr><td width="357" valign="top" colspan="2" style="background:rgb(75,172,198);"><br><br><span style="color:rgb(255,255,255);"><span style="font-family:Courier New;">FTP与TFTP的不同</span></span><br></td></tr><tr><td valign="top" style="background:rgb(183,221,232);"><br><br><span style="font-family:Courier New;">传输协议不同</span><br></td><td valign="top" style="background:rgb(183,221,232);"><br><br><span style="font-family:Courier New;">FTP是基于TCP,&nbsp;TFTP是基于UDP</span><br></td></tr><tr><td valign="top"><br><br><span style="font-family:Courier New;">端口号不同</span><br></td><td valign="top"><br><br><span style="font-family:Courier New;">FTP是用21,20,&nbsp;TFTP是69</span><br></td></tr><tr><td valign="top" style="background:rgb(183,221,232);"><br><br><span style="font-family:Courier New;">速度和安全</span><br></td><td valign="top" style="background:rgb(183,221,232);"><br><br><span style="font-family:Courier New;">FTP在速度慢但安全性好,&nbsp;TFTP速度快但是安全性不如FTP高</span><br></td></tr></tbody></table>
+
+<p><span style="font-family:Courier New;">&nbsp;</span></p>
+<p><span style="font-family:Courier New;">&nbsp;</span></p>
+<h2 id="WWW/万维网"><span style="color:rgb(255, 0, 0);"><span style="font-family:Courier New;">WWW/万维网</span></span></h2><p><span style="font-family:Courier New;">    &nbsp; &nbsp;&nbsp;WWW以客户/服务器方式工作。使用端口80.    浏览器就是在用户计算机上的WWW客户程序。WWW文档所驻留的计算机则运行服务器程序,也称为WWW服务器。客户程序向服务器程序发出请求,服务器程序向客户程序送回客户所要的WWW文档。</span></p>
+<p><span style="font-family:Courier New;">&nbsp; &nbsp;&nbsp;在万维网客户程序与万维网服务器程序之间进行交互所使用的协议是超文本传送协议&nbsp;HTTP&nbsp;(Hyper&nbsp;Text&nbsp;Transfer&nbsp;Protocol),&nbsp;HTTP使用<span style="color:rgb(0,0,255);">TCP&nbsp;连接</span>进行可靠的传送。HTTP&nbsp;是<span style="color:rgb(0,0,255);">面向事务</span>的应用层协议,它是万维网上能够可靠地交换文件(包括文本、声音、图像等各种多媒体文件)的重要基础。</span></p>
+<p><span style="font-family:Courier New;">    &nbsp; &nbsp;&nbsp;WWW使用统一资源定位符&nbsp;<span style="color:rgb(0,0,255);">URL</span>&nbsp;(Uniform&nbsp;Resource&nbsp;Locator)来标志万维网上的各种文档,使每一个文档在整个因特网的范围内具有唯一的标识符&nbsp;URL。URL的一般格式</span></p>
+<p><span style="font-family:Courier New;">&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&lt;协议&gt;://&lt;主机&gt;:&lt;端口号&gt;/&lt;路径&gt;&nbsp;</span></p>
+<p><span style="font-family:Courier New;">    &nbsp; &nbsp;&nbsp;超文本标记语言&nbsp;HTML&nbsp;(Hyper&nbsp;Text&nbsp;Markup&nbsp;Language)使得万维网页面的设计者可以很方便地用一个超链接从本页面的某处链接到因特网上的任何一个万维网页面,并且能够在自己的计算机屏幕上将这些页面显示出来。</span></p>
+<p><span style="font-family:Courier New;">&nbsp;</span></p>
+<p><span style="font-family:Courier New;font-size:18px;"><strong>万维网的工作过程：</strong></span></p>
+<p><span style="font-family:Courier New;">&nbsp;&nbsp;&nbsp;&lt;设&nbsp;URL&nbsp;为&nbsp;<a href="http://www.tmtpost.com/99682.html&gt;用户点击鼠标后所发生的事件：" target="_blank" rel="external">http://www.tmtpost.com/99682.html&gt;用户点击鼠标后所发生的事件：</a></span></p>
+<p><span style="font-family:Courier New;">&nbsp; &nbsp;&nbsp;(1)&nbsp;浏览器分析超链指向页面的&nbsp;URL。</span></p>
+<p><span style="font-family:Courier New;">&nbsp; &nbsp;&nbsp;(2)&nbsp;浏览器向&nbsp;DNS&nbsp;请求解析&nbsp;www.tmtpost.com&nbsp;的&nbsp;IP&nbsp;地址。</span></p>
+<p><span style="font-family:Courier New;">&nbsp; &nbsp;&nbsp;(3)&nbsp;域名系统&nbsp;DNS&nbsp;解析出钛媒体服务器的&nbsp;IP&nbsp;地址。</span></p>
+<p><span style="font-family:Courier New;">&nbsp; &nbsp;&nbsp;(4)&nbsp;浏览器与服务器建立&nbsp;TCP&nbsp;连接</span></p>
+<p><span style="font-family:Courier New;">&nbsp; &nbsp;&nbsp;(5)&nbsp;浏览器发出取文件命令：&nbsp;&nbsp;GET&nbsp;/99682.html</span></p>
+<p><span style="font-family:Courier New;">&nbsp; &nbsp;&nbsp;(6)&nbsp;服务器给出响应,把文件&nbsp;99682.html&nbsp;发给浏览器。</span></p>
+<p><span style="font-family:Courier New;">&nbsp; &nbsp;&nbsp;(7)&nbsp;TCP&nbsp;连接释放。</span></p>
+<p><span style="font-family:Courier New;">&nbsp; &nbsp;&nbsp;(8)&nbsp;浏览器显示钛媒体相关网页文件&nbsp;99682.html&nbsp;中的所有文本。</span></p>
+<p><span style="font-family:Courier New;">&nbsp;</span></p>
+<p><span style="font-family:Courier New;font-size:18px;"><strong>HTTP主要特点</strong></span></p>
+<p><span style="font-family:Courier New;">    &nbsp; &nbsp;&nbsp;HTTP是<span style="color:rgb(255,0,0);">面向事务</span>的客户服务器协议。</span></p>
+<p><span style="font-family:Courier New;">    &nbsp; &nbsp;&nbsp;HTTP&nbsp;协议是<span style="color:rgb(255,0,0);">无状态的(stateless)</span><span style="color:rgb(255,0,0);">,</span><span style="color:rgb(255,0,0);">即不需要记忆交互的当前状态</span>,因为过程简单。</span></p>
+<p><span style="font-family:Courier New;">    &nbsp; &nbsp;&nbsp;HTTP&nbsp;1.0协议是<span style="color:rgb(255,0,0);">非持续连接</span>。建立TCP连接后,一个HTTP请求过去,一个HTTP响应过来,然后就断开TCP连接。</span></p>
+<p><span style="font-family:Courier New;">    &nbsp; &nbsp;&nbsp;HTTP&nbsp;使用了<span style="color:rgb(255,0,0);">面向连接的&nbsp;TCP&nbsp;向上提供的服务</span>。但&nbsp;<span style="color:rgb(255,0,0);">HTTP&nbsp;协议本身是无连接</span>的。</span></p>
+<p><span style="font-family:Courier New;">&nbsp;</span></p>
+<p><span style="font-family:Courier New;font-size:18px;"><strong>持续连接</strong></span></p>
+<p><span style="font-family:Courier New;">    &nbsp; &nbsp;&nbsp;不同于HTTP/1.0,HTTP/1.1&nbsp;协议使用持续连接。</span></p>
+<pre><code><span class="tag">&lt;<span class="title">span</span> <span class="attribute">style</span>=<span class="value">"font-family:Courier New;"</span>&gt;</span><span class="tag">&lt;<span class="title">span</span> <span class="attribute">style</span>=<span class="value">"color:rgb(255,0,0);"</span>&gt;</span>&amp;nbsp; &amp;nbsp;&amp;nbsp;万维网服务器在发送响应后仍然在一段时间内保持这条连接<span class="tag">&lt;/<span class="title">span</span>&gt;</span>,使同一个客户(浏览器)和该服务器可以继续在这条连接上传送后续的&amp;nbsp;HTTP&amp;nbsp;请求报文和响应报文。而且这并不局限于传送同一个页面上链接的文档,而是只要这些文档都在同一个服务器上就行。<span class="tag">&lt;/<span class="title">span</span>&gt;</span>
+</code></pre><p><span style="font-family:Courier New;">    &nbsp; &nbsp;&nbsp;目前一些流行的浏览器(如IE&nbsp;6.0)的默认设置就是使用&nbsp;HTTP/1.1。</span></p>
+<p><span style="font-family:Courier New;">&nbsp;</span></p>
+<p><span style="font-family:Courier New;font-size:18px;"><strong>持续连接的两种工作方式</strong></span></p>
+<p><span style="font-family:Courier New;">    &nbsp; &nbsp;&nbsp;非流水线方式：<span style="color:rgb(255,0,0);">客户在收到前一个响应后才能发出下一个请求</span>。虽然这比非持续连接的两倍&nbsp;RTT&nbsp;的开销节省了建立&nbsp;TCP&nbsp;连接所需的一个&nbsp;RTT&nbsp;时间,但服务器在发送完一个对象后,其&nbsp;TCP&nbsp;连接就处于空闲状态,浪费了服务器资源。</span></p>
+<p><span style="font-family:Courier New;">    &nbsp; &nbsp;&nbsp;流水线方式：<span style="color:rgb(255,0,0);">客户在收到&nbsp;HTTP&nbsp;的响应报文之前就能够接着发送新的请求报文</span>。一个接一个的请求报文到达服务器后,服务器就可连续发回响应报文。使用流水线方式时,客户访问所有的对象只需花费一个&nbsp;RTT时间,使&nbsp;TCP&nbsp;连接中的空闲时间减少,提高了下载文档效率</span></p>
+<p><span style="font-family:Courier New;">&nbsp;</span></p>
+<p><span style="font-family:Courier New;font-size:18px;"><strong>HTTP请求报文格式</strong></span></p>
+<table cellpadding="0" cellspacing="0"></table>
+
+<p><span style="font-family:Courier New;">&nbsp;<img src="http://img.blog.csdn.net/20150408145500498?watermark/2/text/aHR0cDovL2Jsb2cuY3Nkbi5uZXQvempmMjgwNDQxNTg5/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70/gravity/Center" alt=""></span></p>
+<p><span style="font-family:Courier New;">    &nbsp; &nbsp;&nbsp;所谓“方法”就是对所请求的对象进行的操作,因此这些方法实际上也就是一些命令。而且,请求报文的类型是由它所采用的方法决定的。&nbsp;</span></p>
+<p><span style="font-family:Courier New;">&nbsp;</span></p>
+<p><span style="font-family:Courier New;font-size:18px;"><strong>HTTP响应报文格式</strong></span></p>
+<table cellpadding="0" cellspacing="0"></table>
+
+<p><span style="font-family:Courier New;">&nbsp;<img src="http://img.blog.csdn.net/20150408145619775?watermark/2/text/aHR0cDovL2Jsb2cuY3Nkbi5uZXQvempmMjgwNDQxNTg5/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70/gravity/Center" alt=""></span></p>
+<p><span style="font-family:Courier New;">响应报文的开始行是状态行,&nbsp;状态行包括三项内容,即&nbsp;HTTP&nbsp;的版本,状态码,以及解释状态码的简单短语.</span></p>
+<p><span style="font-family:Courier New;"><br></span></p>
+<p>原文转载自汗青ZJF <a href="http://blog.csdn.net/zjf280441589/article/category/1854365" target="_blank" rel="external">http://blog.csdn.net/zjf280441589/article/category/1854365</a></p>
+
+      
+    </div>
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/source/tags/TCP-IP/" rel="tag">#TCP/IP</a>
+          
+            <a href="/source/tags/应用层/" rel="tag">#应用层</a>
+          
+            <a href="/source/tags/计算机网络/" rel="tag">#计算机网络</a>
+          
+        </div>
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2017/TCPIP入门(3)--传输层/" rel="next" title="TCP/IP入门(3) --传输层">
+                <i class="fa fa-chevron-left"></i> TCP/IP入门(3) --传输层
+              </a>
+            
+          </div>
+
+          <div class="post-nav-prev post-nav-item">
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </article>
+
+
+
+    <div class="post-spread">
+      
+        <div class="ds-share flat" data-thread-key="2017/TCPIP入门(4)--应用层/"
+     data-title="TCP/IP入门(4) --应用层"
+     data-content=""
+     data-url="http://yoursite.com/2017/TCPIP入门(4)--应用层/">
+  <div class="ds-share-inline">
+    <ul  class="ds-share-icons-16">
+
+      <li data-toggle="ds-share-icons-more"><a class="ds-more" href="javascript:void(0);">分享到：</a></li>
+      <li><a class="ds-weibo" href="javascript:void(0);" data-service="weibo">微博</a></li>
+      <li><a class="ds-qzone" href="javascript:void(0);" data-service="qzone">QQ空间</a></li>
+      <li><a class="ds-qqt" href="javascript:void(0);" data-service="qqt">腾讯微博</a></li>
+      <li><a class="ds-wechat" href="javascript:void(0);" data-service="wechat">微信</a></li>
+
+    </ul>
+    <div class="ds-share-icons-more">
+    </div>
+  </div>
+</div>
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+  <div class="comments" id="comments">
+    
+      <div class="ds-thread" data-thread-key="2017/TCPIP入门(4)--应用层/"
+           data-title="TCP/IP入门(4) --应用层" data-url="http://yoursite.com/2017/TCPIP入门(4)--应用层/">
+      </div>
+    
+  </div>
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview sidebar-panel ">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+          <img class="site-author-image" itemprop="image"
+               src="/images/avatar.jpg"
+               alt="Mr.Zhang" />
+          <p class="site-author-name" itemprop="name">Mr.Zhang</p>
+          <p class="site-description motion-element" itemprop="description">伟大的工作，并不是用力量而是用耐心去完成的。 —— 约翰逊</p>
+        </div>
+        <nav class="site-state motion-element">
+          <div class="site-state-item site-state-posts">
+            <a href="/archives">
+              <span class="site-state-item-count">12</span>
+              <span class="site-state-item-name">日志</span>
+            </a>
+          </div>
+          
+          
+            <div class="site-state-item site-state-categories">
+              <a href="/categories">
+                <span class="site-state-item-count">4</span>
+                <span class="site-state-item-name">分类</span>
+              </a>
+            </div>
+          
+
+          
+            <div class="site-state-item site-state-tags">
+              <a href="/tags">
+                <span class="site-state-item-count">12</span>
+                <span class="site-state-item-name">标签</span>
+              </a>
+            </div>
+          
+
+        </nav>
+
+        
+
+        <div class="links-of-author motion-element">
+          
+            
+              <span class="links-of-author-item">
+                <a href="https://github.com/zhangxiaochen" target="_blank">
+                  
+                    <i class="fa fa-github"></i> GitHub
+                  
+                </a>
+              </span>
+            
+          
+        </div>
+
+        
+        
+
+        <div class="links-of-author motion-element">
+          
+        </div>
+
+      </section>
+
+      
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc-indicator-top post-toc-indicator">
+            <i class="fa fa-angle-double-up"></i>
+          </div>
+          <div class="post-toc">
+            
+              
+            
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#DNS简介"><span class="nav-number">1.</span> <span class="nav-text">DNS简介</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#FTP"><span class="nav-number">2.</span> <span class="nav-text">FTP</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#WWW/万维网"><span class="nav-number">3.</span> <span class="nav-text">WWW/万维网</span></a></li></ol></div>
+            
+          </div>
+          <div class="post-toc-indicator-bottom post-toc-indicator">
+            <i class="fa fa-angle-double-down"></i>
+          </div>
+        </section>
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright" >
+  
+  &copy;  2015 - 
+  <span itemprop="copyrightYear">2017</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Mr.Zhang</span>
+</div>
+
+<div class="powered-by">
+  由 <a class="theme-link" href="http://hexo.io">Hexo</a> 强力驱动
+</div>
+
+<div class="theme-info">
+  主题 -
+  <a class="theme-link" href="https://github.com/iissnan/hexo-theme-next">
+    NexT.Mist
+  </a>
+</div>
+
+
+
+      </div>
+    </footer>
+
+    <div class="back-to-top"></div>
+  </div>
+
+  
+
+
+  
+
+
+
+  <script type="text/javascript" src="/vendors/jquery/index.js?v=2.1.3"></script>
+
+  <script type="text/javascript" src="/vendors/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+
+  <script type="text/javascript" src="/vendors/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+
+  <script type="text/javascript" src="/vendors/velocity/velocity.min.js"></script>
+
+  <script type="text/javascript" src="/vendors/velocity/velocity.ui.min.js"></script>
+
+  <script type="text/javascript" src="/vendors/fancybox/source/jquery.fancybox.pack.js"></script>
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=0.5.0"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=0.5.0"></script>
+
+
+
+  
+  
+
+  
+  
+<script type="text/javascript" src="/js/src/scrollspy.js?v=0.5.0"></script>
+
+<script type="text/javascript" id="sidebar.toc.highlight">
+  $(document).ready(function () {
+    var tocSelector = '.post-toc';
+    var $tocSelector = $(tocSelector);
+    var activeCurrentSelector = '.active-current';
+
+    $tocSelector
+      .on('activate.bs.scrollspy', function () {
+        var $currentActiveElement = $(tocSelector + ' .active').last();
+
+        removeCurrentActiveClass();
+        $currentActiveElement.addClass('active-current');
+
+        $tocSelector[0].scrollTop = $currentActiveElement.position().top;
+      })
+      .on('clear.bs.scrollspy', function () {
+        removeCurrentActiveClass();
+      });
+
+    function removeCurrentActiveClass () {
+      $(tocSelector + ' ' + activeCurrentSelector)
+        .removeClass(activeCurrentSelector.substring(1));
+    }
+
+    function processTOC () {
+      getTOCMaxHeight();
+      toggleTOCOverflowIndicators();
+    }
+
+    function getTOCMaxHeight () {
+      var height = $('.sidebar').height() -
+                   $tocSelector.position().top -
+                   $('.post-toc-indicator-bottom').height();
+
+      $tocSelector.css('height', height);
+
+      return height;
+    }
+
+    function toggleTOCOverflowIndicators () {
+      tocOverflowIndicator(
+        '.post-toc-indicator-top',
+        $tocSelector.scrollTop() > 0 ? 'show' : 'hide'
+      );
+
+      tocOverflowIndicator(
+        '.post-toc-indicator-bottom',
+        $tocSelector.scrollTop() >= $tocSelector.find('ol').height() - $tocSelector.height() ? 'hide' : 'show'
+      )
+    }
+
+    $(document).on('sidebar.motion.complete', function () {
+      processTOC();
+    });
+
+    $('body').scrollspy({ target: tocSelector });
+    $(window).on('resize', function () {
+      if ( $('.sidebar').hasClass('sidebar-active') ) {
+        processTOC();
+      }
+    });
+
+    onScroll($tocSelector);
+
+    function onScroll (element) {
+      element.on('mousewheel DOMMouseScroll', function (event) {
+          var oe = event.originalEvent;
+          var delta = oe.wheelDelta || -oe.detail;
+
+          this.scrollTop += ( delta < 0 ? 1 : -1 ) * 30;
+          event.preventDefault();
+
+          toggleTOCOverflowIndicators();
+      });
+    }
+
+    function tocOverflowIndicator (indicator, action) {
+      var $indicator = $(indicator);
+      var opacity = action === 'show' ? 1 : 0;
+      $indicator.velocity ?
+        $indicator.velocity('stop').velocity({
+          opacity: opacity
+        }, { duration: 100 }) :
+        $indicator.stop().animate({
+          opacity: opacity
+        }, 100);
+    }
+
+  });
+</script>
+
+<script type="text/javascript" id="sidebar.nav">
+  $(document).ready(function () {
+    var html = $('html');
+    var TAB_ANIMATE_DURATION = 200;
+    var hasVelocity = $.isFunction(html.velocity);
+
+    $('.sidebar-nav li').on('click', function () {
+      var item = $(this);
+      var activeTabClassName = 'sidebar-nav-active';
+      var activePanelClassName = 'sidebar-panel-active';
+      if (item.hasClass(activeTabClassName)) {
+        return;
+      }
+
+      var currentTarget = $('.' + activePanelClassName);
+      var target = $('.' + item.data('target'));
+
+      hasVelocity ?
+        currentTarget.velocity('transition.slideUpOut', TAB_ANIMATE_DURATION, function () {
+          target
+            .velocity('stop')
+            .velocity('transition.slideDownIn', TAB_ANIMATE_DURATION)
+            .addClass(activePanelClassName);
+        }) :
+        currentTarget.animate({ opacity: 0 }, TAB_ANIMATE_DURATION, function () {
+          currentTarget.hide();
+          target
+            .stop()
+            .css({'opacity': 0, 'display': 'block'})
+            .animate({ opacity: 1 }, TAB_ANIMATE_DURATION, function () {
+              currentTarget.removeClass(activePanelClassName);
+              target.addClass(activePanelClassName);
+            });
+        });
+
+      item.siblings().removeClass(activeTabClassName);
+      item.addClass(activeTabClassName);
+    });
+
+    $('.post-toc a').on('click', function (e) {
+      e.preventDefault();
+      var targetSelector = NexT.utils.escapeSelector(this.getAttribute('href'));
+      var offset = $(targetSelector).offset().top;
+      hasVelocity ?
+        html.velocity('stop').velocity('scroll', {
+          offset: offset  + 'px',
+          mobileHA: false
+        }) :
+        $('html, body').stop().animate({
+          scrollTop: offset
+        }, 500);
+    });
+
+    // Expand sidebar on post detail page by default, when post has a toc.
+    NexT.motion.middleWares.sidebar = function () {
+      var $tocContent = $('.post-toc-content');
+
+      if (CONFIG.sidebar.display === 'post' || CONFIG.sidebar.display === 'always') {
+        if ($tocContent.length > 0 && $tocContent.html().trim().length > 0) {
+          NexT.utils.displaySidebar();
+        }
+      }
+    };
+  });
+</script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=0.5.0"></script>
+
+
+
+  
+
+  
+    
+  
+
+  <script type="text/javascript">
+    var duoshuoQuery = {short_name:"zhangxiaochen"};
+    (function() {
+      var ds = document.createElement('script');
+      ds.type = 'text/javascript';ds.async = true;
+      ds.id = 'duoshuo-script';
+      ds.src = (document.location.protocol == 'https:' ? 'https:' : 'http:') + '//static.duoshuo.com/embed.js';
+      ds.charset = 'UTF-8';
+      (document.getElementsByTagName('head')[0]
+      || document.getElementsByTagName('body')[0]).appendChild(ds);
+    })();
+  </script>
+
+  
+    
+  
+
+
+
+
+
+  
+  
+
+  
+  
+
+
+</body>
+</html>

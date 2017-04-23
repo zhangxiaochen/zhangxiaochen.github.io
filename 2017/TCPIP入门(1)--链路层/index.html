@@ -1,0 +1,862 @@
+<!doctype html>
+
+
+
+  
+
+
+<html class="theme-next mist use-motion">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+  <link href="/vendors/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css"/>
+
+
+
+
+
+
+<link href="/vendors/font-awesome/css/font-awesome.min.css?v=4.4.0" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=0.5.0" rel="stylesheet" type="text/css" />
+
+
+  <meta name="keywords" content="TCP/IP,计算机网络,链路层," />
+
+
+
+
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=0.5.0" />
+
+
+
+
+
+
+<meta name="description" content="看到一篇非常棒的系统讲解TCP/IP协议的博客，转载过来自己整理下。　　1. TCP/IP体系结构　　2. 电路交换报文交换与分组交换　　3. MTU与路径MTU　　4. 如何实现透明传输　　5. CRC循环校验法　　6. MAC地址　　7. 网络设备
+TCP/IP体系结构
+
+网络接口层　　物理层定义与传输媒体的接口有关的一些特性,即机械特性、电气特性、功能特性、过程特性,并需要完成并行传输和串行">
+<meta property="og:type" content="article">
+<meta property="og:title" content="TCP/IP入门(1) --链路层">
+<meta property="og:url" content="http://yoursite.com/2017/TCPIP入门(1)--链路层/index.html">
+<meta property="og:site_name" content="Mr.Zhang's Coding Life">
+<meta property="og:description" content="看到一篇非常棒的系统讲解TCP/IP协议的博客，转载过来自己整理下。　　1. TCP/IP体系结构　　2. 电路交换报文交换与分组交换　　3. MTU与路径MTU　　4. 如何实现透明传输　　5. CRC循环校验法　　6. MAC地址　　7. 网络设备
+TCP/IP体系结构
+
+网络接口层　　物理层定义与传输媒体的接口有关的一些特性,即机械特性、电气特性、功能特性、过程特性,并需要完成并行传输和串行">
+<meta property="og:image" content="http://i1.piimg.com/567571/08d20620bdeaddfa.png">
+<meta property="og:image" content="http://i2.muimg.com/567571/47ab88d5522d6135.png">
+<meta property="og:image" content="http://i1.piimg.com/567571/0e94a9598f57c84b.png">
+<meta property="og:updated_time" content="2017-04-23T13:40:46.045Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="TCP/IP入门(1) --链路层">
+<meta name="twitter:description" content="看到一篇非常棒的系统讲解TCP/IP协议的博客，转载过来自己整理下。　　1. TCP/IP体系结构　　2. 电路交换报文交换与分组交换　　3. MTU与路径MTU　　4. 如何实现透明传输　　5. CRC循环校验法　　6. MAC地址　　7. 网络设备
+TCP/IP体系结构
+
+网络接口层　　物理层定义与传输媒体的接口有关的一些特性,即机械特性、电气特性、功能特性、过程特性,并需要完成并行传输和串行">
+
+
+
+<script type="text/javascript" id="hexo.configuration">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    scheme: 'Mist',
+    sidebar: {"position":"left","display":"post"},
+    fancybox: true,
+    motion: true,
+    duoshuo: {
+      userId: 0,
+      author: '博主'
+    }
+  };
+</script>
+
+  <title> TCP/IP入门(1) --链路层 | Mr.Zhang's Coding Life </title>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+
+
+
+  <script type="text/javascript">
+    var _hmt = _hmt || [];
+    (function() {
+      var hm = document.createElement("script");
+      hm.src = "//hm.baidu.com/hm.js?7ccda0d578d22c62e4a93038a6095937";
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(hm, s);
+    })();
+  </script>
+
+
+
+
+
+
+  
+  
+    
+  
+
+  <div class="container one-collumn sidebar-position-left page-post-detail ">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-meta ">
+  
+
+  <div class="custom-logo-site-title">
+    <a href="/"  class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <span class="site-title">Mr.Zhang's Coding Life</span>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+  </div>
+  <p class="site-subtitle">张先生的成长日记</p>
+</div>
+
+<div class="site-nav-toggle">
+  <button>
+    <span class="btn-bar"></span>
+    <span class="btn-bar"></span>
+    <span class="btn-bar"></span>
+  </button>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu ">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-home fa-fw"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories" rel="section">
+            
+              <i class="menu-item-icon fa fa-th fa-fw"></i> <br />
+            
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives" rel="section">
+            
+              <i class="menu-item-icon fa fa-archive fa-fw"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags" rel="section">
+            
+              <i class="menu-item-icon fa fa-tags fa-fw"></i> <br />
+            
+            标签
+          </a>
+        </li>
+      
+
+      
+      
+      
+    </ul>
+  
+
+  
+</nav>
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                TCP/IP入门(1) --链路层
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            <span class="post-meta-item-icon">
+              <i class="fa fa-calendar-o"></i>
+            </span>
+            <span class="post-meta-item-text">发表于</span>
+            <time itemprop="dateCreated" datetime="2017-04-15T11:00:00+08:00" content="2017-04-15">
+              2017-04-15
+            </time>
+          </span>
+
+          
+            <span class="post-category" >
+              &nbsp; | &nbsp;
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+              
+                <span itemprop="about" itemscope itemtype="https://schema.org/Thing">
+                  <a href="/source/categories/计算机网络/" itemprop="url" rel="index">
+                    <span itemprop="name">计算机网络</span>
+                  </a>
+                </span>
+
+                
+                
+
+              
+            </span>
+          
+
+          
+            
+              <span class="post-comments-count">
+                &nbsp; | &nbsp;
+                <a href="/2017/TCPIP入门(1)--链路层/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count ds-thread-count" data-thread-key="2017/TCPIP入门(1)--链路层/" itemprop="commentsCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+
+          
+          
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <p>　　看到一篇非常棒的系统讲解TCP/IP协议的博客，转载过来自己整理下。<br>　　1. TCP/IP体系结构<br>　　2. 电路交换报文交换与分组交换<br>　　3. MTU与路径MTU<br>　　4. 如何实现透明传输<br>　　5. CRC循环校验法<br>　　6. MAC地址<br>　　7. 网络设备</p>
+<h2 id="TCP/IP体系结构">TCP/IP体系结构</h2><center><img src="http://i1.piimg.com/567571/08d20620bdeaddfa.png" alt="Alt text" title="TCP/IP的体系结构"></center>
+
+<h3 id="网络接口层">网络接口层</h3><p>　　物理层定义与传输媒体的接口有关的一些特性,即机械特性、电气特性、功能特性、过程特性,并需要完成并行传输和串行传输之间的转换。<br>　　数据链路层向该层用户提供透明的和可靠的数据传输服务。透明性是指该层上传输的数据的内容、格式及编码没有限制,也没有必要解释信息结构的意义；可靠性是指在传输过程中将物理层提供的可能出错的物理连接改造成为逻辑上无差错的数据链路,其具体的方法有帧同步、差错控制、流量控制、链路管理。<br>　　数据链路层中的主要协议有点对点协议PPP,CSMA/CD协议,以太网802.3。</p>
+<h3 id="网际层(IP层)">网际层(IP层)</h3><p>　　网际层向上只提供简单灵活的、无连接的、尽最大努力交付的数据报服务。网际层不提供服务质量的承诺,即所传输的分组可能出错、丢失、重复和失序,当然也不保证分组交付的时限。<br>　　网际层中主要协议有IP协议,地址解析协议ARP和网际控制报文协议ICMP等。<br>　　IP协议是网际层的核心,通过路由选择将下一跳IP封装后交给网络接口层。IP 数据报是无连接服务。<br>　　ICMP是网际层的补充,可以回送报文。用来检测网络是否通畅(使用ping命令)。<br>　　ARP是通过已知IP,寻找对于主机的MAC地址。</p>
+<h3 id="运输层">运输层</h3><p>　　运输层为应用进程之间提供端到端(进程到进程)的逻辑通信,并具有复用和分用的功能,即发送方不同的应用进程都可以使用同一个运输层协议传送数据；接收方的运输层在剥去报文的首部后能够把这些数据正确交付到目的应用进程。运输层还将对报文进行差错控制,以提供可靠传输。<br>　　运输层中主要协议有用户数据报协议UDP和传输控制协议TCP。</p>
+<h3 id="应用层">应用层</h3><p>　　应用层为用户提供应用程序。<br>　　应用层中主要协议有域名系统DNS,文件传输协议FTP,远程终端协议TELNET,超文本传输协议HTTP,简单邮件传送协议SMTP,邮件读取协议POP3和IMAP,动态主机配置协议DHCP等。</p>
+<ul>
+<li>DNS：提供域名解析服务,提供域名到IP地址之间的转换,使用端口53</li>
+<li>FTP：在异构网络中任意计算机之间传送文件,使用端口21</li>
+<li>TELNET：提供用户远程登录服务,使用端口23,使用明码传送,保密性差、简单方便</li>
+<li>HTTP：用于实现万维网上的各种链接,即万维网客户程序与万维网服务器之间的连接,使用端口80</li>
+<li>SMTP/POP3、IMAP：提供邮件的传输,用来控制信件的发送、中转、从邮件服务器读取邮件</li>
+<li>DHCP：为新加入网络的计算机自动分配IP地址</li>
+</ul>
+<h2 id="电路交换、报文交换与分组交换">电路交换、报文交换与分组交换</h2><center><img src="http://i2.muimg.com/567571/47ab88d5522d6135.png" alt="Alt text" title="电路交换、报文交换与分组交换"></center>
+
+<h3 id="电路交换的三个过程">电路交换的三个过程</h3><p>　　电路建立-&gt;数据传输-&gt;电路拆除<br>　　在通信之前要在通信双方之间建立一条被双方独占的物理通路(由通信双方之间的交换设备和链路逐段连接而成)</p>
+<h3 id="报文交换">报文交换</h3><p>　　报文交换方式的数据传输单位是报文,报文就是站点一次性要发送的数据块,其长度不限且可变。当一个站要发送报文时,它将一个目的地址附加到报文上,网络节点根据报文上的目的地址信息,把报文发送到下一个节点,一直逐个节点地转送到目的节点。<br>　　每个节点在收到整个报文并检查无误后,就暂存这个报文, 然后利用路由信息找出下一个节点的地址, 再把整个报文传送给下一个节点。因此,端与端之间无需先通过呼叫建立连接。</p>
+<h3 id="分组交换">分组交换</h3><p>　　分组交换是报文交换的一种改进,它将报文分成若干个分组,每个分组的长度有一个上限,有限长度的分组使得每个节点所需的存储能力降低了,分组可以存储到内存中,提高了交换速度。它适用于交互式通信,如终端与主机通信。<br>　　电路交换与分组交换优点对比</p>
+<center>电路交换与分组交换优点对比</center>
+
+<table>
+<thead>
+<tr>
+<th style="text-align:center">电路交换</th>
+<th style="text-align:center">分组交换</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:center">①由于通信线路为通信双方用户专用,数据直达,所以传输数据的时延非常小.</td>
+<td style="text-align:center">①加速了数据在网络中的传输。因为分组是逐个传输,可以使后一个分组的存储操作与前一个分组的转发操作并行,这种流水线式传输方式减少了报文的传输时间。此外,传输一个分组所需的缓冲区比传输一份报文所需的缓冲区小得多,这样因缓冲区不足而等待发送的机率及等待的时间也必然少得多。</td>
+</tr>
+<tr>
+<td style="text-align:center">②通信双方之间的物理通路一旦建立,双方可以随时通信,实时性强。</td>
+<td style="text-align:center">②简化了存储管理。因为分组的长度固定,相应的缓冲区的大小也固定,在交换结点中存储器的管理通常被简化为对缓冲区的管理,相对比较容易。</td>
+</tr>
+<tr>
+<td style="text-align:center">③双方通信时按发送顺序传送数据,不存在失序问题。</td>
+<td style="text-align:center">③减少了出错机率和重发数据量。因为分组较短,其出错机率必然减少,每次重发的数据量也就大大减少,这样不仅提高了可靠性,也减少了传输时延。</td>
+</tr>
+<tr>
+<td style="text-align:center">④电路交换既适用于传输模拟信号,也适用于传输数字信号。</td>
+<td style="text-align:center">④由于分组短小,更适用于采用优先级策略,便于及时传送一些紧急数据,因此对于计算机之间的突发式的数据通信,分组交换显然更为合适些。</td>
+</tr>
+<tr>
+<td style="text-align:center">⑤电路交换的交换的交换设备控制均较简单。</td>
+</tr>
+</tbody>
+</table>
+<center>电路交换与分组交换缺点对比</center>
+
+<table>
+<thead>
+<tr>
+<th style="text-align:center">电路交换</th>
+<th style="text-align:center">分组交换</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:center">①电路交换的平均连接建立时间对计算机通信来说嫌长。</td>
+<td style="text-align:center">①尽管分组交换比报文交换的传输时延少,但仍存在存储转发时延,而且其结点交换机必须具有更强的处理能力。</td>
+</tr>
+<tr>
+<td style="text-align:center">②电路交换连接建立后,物理通路被通信双方独占,即使通信线路空闲,也不能供其他用户使用,因而信道利用低。</td>
+<td style="text-align:center">②分组交换中的每个分组都要加上源、目的地址和分组编号等信息,这将增大传送的信息量,一定程度上降低了通信效率,增加了处理的时间,使控制复杂,时延增加。</td>
+</tr>
+<tr>
+<td style="text-align:center">③电路交换时,数据直达,不同类型、不同规格、不同速率的终端很难相互进行通信,也难以在通信过程中进行差错控制。</td>
+<td style="text-align:center">③当分组交换采用数据报服务时,可能出现失序、丢失或重复分组,分组到达目的结点时,要对分组按编号进行排序等工作,增加了麻烦。</td>
+</tr>
+</tbody>
+</table>
+<h2 id="MTU与路径MTU">MTU与路径MTU</h2><p>　　以太网和IEEE 802.3对数据帧的长度都有限制,其最大值分别是1500和1492字节,将这个限制称作 <strong>最大传输单元(MTU,Maximum Transmission Unit)</strong>;如果IP层有一个数据报要传,而且数据的长度比链路层的MTU还大,那么IP层就要进行分片(Fragmentation),把数据报分成若干片,这样每一片都小于MTU。<br>　　当网络上的两台主机互相进行通信时,两台主机之间要经过多个网络,每个网络的链路层可能有不同的MTU,其中两台通信主机路径中的最小MTU被称作路径MTU。</p>
+<h3 id="路径MTU的发现方法:">路径MTU的发现方法:</h3><p>　　这是确定两个IP主机之间路径最大传输单元的技术,其目的就是 <strong>为了避免IP分片</strong>。首先源地址将数据报的DF(不要分片)位设置为1,再逐渐增大发送的数据报的大小——路径上任何需要将分组进行分片的设备都会将这种数据报丢弃并返回“数据报过大“的ICMP响应到源地址——这样源主机就”学习“到了无需分片就能通过这条路径的最大的最大传输单元。</p>
+<h2 id="如何实现“透明传输”?">如何实现“透明传输”?</h2><p>　　透明传输的基本概念：数据透明传输就是用户不受协议中的任何限制,可随机的传输任意比特编码的信息, 用户可以完全不必知道协议中所规定的结束段的比特编码或者其他的控制字符,因而不受限制的进行传输。</p>
+<h3 id="字符填充">字符填充</h3><p>　　基本思想:发送端在数据中出现的控制字符”SOH”或”EOT”的前面插入一个转义字符”ESC”(其十六进制编码为1B), 而接收端在将接受到的数据送到上层之前删除之前发送端插入的转义字符;<br>　　如果转义字符也出现在数据当中, 那么应在转义字符前面插入一个转义字符, 当接收端收到连续的两个转义字符时, 就删除其中前面的一个.<br>　　字符填充PPP协议实例: 将信息字段中出现的每一个0x7E字节转换成为2字节序列(0x7D, 0x5E), 若信息字段中出现一个0x7D的字节, 则将其转变成为2字节序列(0x7D, 0x5D). 若信息字段中出现ASCII码的控制字符(即数值小于0x20的字符), 则在该字符前面要加入一个0x7D字节, 同时将该字节的编码加以改变;</p>
+<h3 id="零比特填充">零比特填充</h3><p>　　基本原理:在发送端, 只要发现有5个连续的1, 则立即填入一个0. 接收端对帧中的比特流进行扫描时, 每当发现5个连续的1时, 就把这5个连续的1之后的一个0删除(因为01111110(6个1)表示HDLC数据块的起始和结束,从而构成最终传输的帧).<br>　　注意：只要出现了5个连续的1,则必须加上一个0！</p>
+<h2 id="CRC循环校验法">CRC循环校验法</h2><p>　　在发送端, 先把数据划分为组, 假定每组K个比特(K位), 同时假定待传送的一组数据M=101001(K=6), 我们在M的后面再添加供差错检测用的N位冗余码一起发送.</p>
+<h2 id="MAC地址">MAC地址</h2><p>　　概念：MAC地址就是在链路层上使用的地址,也叫物理地址、硬件地址或链路地址,其被固化在适配器(网卡)的ROM中。可见MAC地址实际上就是适配器(网卡)地址或标识符。当某台计算机使用某块适配器后,适配器上的标识符就成为该计算机的MAC地址。MAC地址长度为6字节(48比特),由IEEE的注册管理结构RA进行管理分配。<br>　　作用：MAC地址是计算机的唯一标识,在 <strong>数据链路层</strong> 中,交换机通过识别MAC地址进行数据包的传输。</p>
+<center><img src="http://i1.piimg.com/567571/0e94a9598f57c84b.png" alt="Alt text" title="电路交换、报文交换与分组交换"></center>
+
+<h2 id="网络设备">网络设备</h2><h3 id="物理层用到的设备是中继器和集线器">物理层用到的设备是中继器和集线器</h3><p>　　中继器的主要功能是对接收到的信号进行再生整形放大以扩大网络的传输距离(从一个网络电缆中接收信号, 放大它们, 然后将其送入下一个电缆)。<br>　　集线器(HUB)就是将网线集中到一起的机器,也就是多台主机和设备的连接器。集线器的主要功能是对接收到的信号进行同步整形放大(同中继器),以扩大网络的传输距离; 与中继器的区别在于集线器能够提供多端口服务,也称为多端口中继器。</p>
+<h3 id="数据链路层用到的设备是交换机和网桥">数据链路层用到的设备是交换机和网桥</h3><p>　　交换机是一种基于MAC识别,能完成封装, 转发数据包功能的网络设备。它可以“学习”MAC地址,并把其存放在内部地址表中,当一个数据帧的目的地址在MAC地址表中有映射时,它被转发到连接目的节点的端口而不是所有端口。交换机将局域网分为多个冲突域,每个冲突域都是有独立的宽带,因此大大提高了局域网的带宽。<br>　　网桥就是个硬件网络协议翻译器, 在网络互联中可起到数据接收、地址过滤与数据转发的作用, 可用来实现多个不同网络系统之间的数据交换。</p>
+<h3 id="网络层用到的设备是路由器">网络层用到的设备是路由器</h3><p>　　路由器用于连接多个逻辑上分开的网络,具有路由和转发的功能,它能在多网络互联环境中,建立灵活的连接,可用完全不同的数据分组和介质访问方法连接各种子网(我们将在网络层对路由器有更详尽的描述)。</p>
+<h3 id="应用层用到的设备是网关">应用层用到的设备是网关</h3><p>　　网关(协议转换器)是在网络层之上的具有协议转换功能的设施,所以称为设施,是因为网关不一定是一台设备,有可能在一台主机中实现网关功能。</p>
+<h3 id="网关分类:">网关分类:</h3><ul>
+<li>协议网关：协议网关通常在使用不同协议的网络区域间做协议转换。</li>
+<li>应用网关：应用网关是在使用不同数据格式间翻译数据的系统。</li>
+<li>安全网关：安全网关是各种技术的融合,具有重要且独特的保护作用,其范围从协议级过滤到十分复杂的应用级过滤。</li>
+</ul>
+<p>　　原文转载自汗青ZJF <a href="http://blog.csdn.net/zjf280441589/article/category/1854365" target="_blank" rel="external">http://blog.csdn.net/zjf280441589/article/category/1854365</a></p>
+
+      
+    </div>
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/source/tags/TCP-IP/" rel="tag">#TCP/IP</a>
+          
+            <a href="/source/tags/计算机网络/" rel="tag">#计算机网络</a>
+          
+            <a href="/source/tags/链路层/" rel="tag">#链路层</a>
+          
+        </div>
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2017/LeetCode NOTES (6) No.53-No.118-No.119-No.121-No.122/" rel="next" title="LeetCode NOTES (6) No.53-No.118-No.119-No.121-No.122">
+                <i class="fa fa-chevron-left"></i> LeetCode NOTES (6) No.53-No.118-No.119-No.121-No.122
+              </a>
+            
+          </div>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2017/TCPIP入门(2)--网络层/" rel="prev" title="TCP/IP入门(2) --网络层">
+                TCP/IP入门(2) --网络层 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </article>
+
+
+
+    <div class="post-spread">
+      
+        <div class="ds-share flat" data-thread-key="2017/TCPIP入门(1)--链路层/"
+     data-title="TCP/IP入门(1) --链路层"
+     data-content=""
+     data-url="http://yoursite.com/2017/TCPIP入门(1)--链路层/">
+  <div class="ds-share-inline">
+    <ul  class="ds-share-icons-16">
+
+      <li data-toggle="ds-share-icons-more"><a class="ds-more" href="javascript:void(0);">分享到：</a></li>
+      <li><a class="ds-weibo" href="javascript:void(0);" data-service="weibo">微博</a></li>
+      <li><a class="ds-qzone" href="javascript:void(0);" data-service="qzone">QQ空间</a></li>
+      <li><a class="ds-qqt" href="javascript:void(0);" data-service="qqt">腾讯微博</a></li>
+      <li><a class="ds-wechat" href="javascript:void(0);" data-service="wechat">微信</a></li>
+
+    </ul>
+    <div class="ds-share-icons-more">
+    </div>
+  </div>
+</div>
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+  <div class="comments" id="comments">
+    
+      <div class="ds-thread" data-thread-key="2017/TCPIP入门(1)--链路层/"
+           data-title="TCP/IP入门(1) --链路层" data-url="http://yoursite.com/2017/TCPIP入门(1)--链路层/">
+      </div>
+    
+  </div>
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview sidebar-panel ">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+          <img class="site-author-image" itemprop="image"
+               src="/images/avatar.jpg"
+               alt="Mr.Zhang" />
+          <p class="site-author-name" itemprop="name">Mr.Zhang</p>
+          <p class="site-description motion-element" itemprop="description">伟大的工作，并不是用力量而是用耐心去完成的。 —— 约翰逊</p>
+        </div>
+        <nav class="site-state motion-element">
+          <div class="site-state-item site-state-posts">
+            <a href="/archives">
+              <span class="site-state-item-count">12</span>
+              <span class="site-state-item-name">日志</span>
+            </a>
+          </div>
+          
+          
+            <div class="site-state-item site-state-categories">
+              <a href="/categories">
+                <span class="site-state-item-count">4</span>
+                <span class="site-state-item-name">分类</span>
+              </a>
+            </div>
+          
+
+          
+            <div class="site-state-item site-state-tags">
+              <a href="/tags">
+                <span class="site-state-item-count">12</span>
+                <span class="site-state-item-name">标签</span>
+              </a>
+            </div>
+          
+
+        </nav>
+
+        
+
+        <div class="links-of-author motion-element">
+          
+            
+              <span class="links-of-author-item">
+                <a href="https://github.com/zhangxiaochen" target="_blank">
+                  
+                    <i class="fa fa-github"></i> GitHub
+                  
+                </a>
+              </span>
+            
+          
+        </div>
+
+        
+        
+
+        <div class="links-of-author motion-element">
+          
+        </div>
+
+      </section>
+
+      
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc-indicator-top post-toc-indicator">
+            <i class="fa fa-angle-double-up"></i>
+          </div>
+          <div class="post-toc">
+            
+              
+            
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#TCP/IP体系结构"><span class="nav-number">1.</span> <span class="nav-text">TCP/IP体系结构</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#网络接口层"><span class="nav-number">1.1.</span> <span class="nav-text">网络接口层</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#网际层(IP层)"><span class="nav-number">1.2.</span> <span class="nav-text">网际层(IP层)</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#运输层"><span class="nav-number">1.3.</span> <span class="nav-text">运输层</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#应用层"><span class="nav-number">1.4.</span> <span class="nav-text">应用层</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#电路交换、报文交换与分组交换"><span class="nav-number">2.</span> <span class="nav-text">电路交换、报文交换与分组交换</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#电路交换的三个过程"><span class="nav-number">2.1.</span> <span class="nav-text">电路交换的三个过程</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#报文交换"><span class="nav-number">2.2.</span> <span class="nav-text">报文交换</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#分组交换"><span class="nav-number">2.3.</span> <span class="nav-text">分组交换</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#MTU与路径MTU"><span class="nav-number">3.</span> <span class="nav-text">MTU与路径MTU</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#路径MTU的发现方法:"><span class="nav-number">3.1.</span> <span class="nav-text">路径MTU的发现方法:</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#如何实现“透明传输”?"><span class="nav-number">4.</span> <span class="nav-text">如何实现“透明传输”?</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#字符填充"><span class="nav-number">4.1.</span> <span class="nav-text">字符填充</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#零比特填充"><span class="nav-number">4.2.</span> <span class="nav-text">零比特填充</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#CRC循环校验法"><span class="nav-number">5.</span> <span class="nav-text">CRC循环校验法</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#MAC地址"><span class="nav-number">6.</span> <span class="nav-text">MAC地址</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#网络设备"><span class="nav-number">7.</span> <span class="nav-text">网络设备</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#物理层用到的设备是中继器和集线器"><span class="nav-number">7.1.</span> <span class="nav-text">物理层用到的设备是中继器和集线器</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#数据链路层用到的设备是交换机和网桥"><span class="nav-number">7.2.</span> <span class="nav-text">数据链路层用到的设备是交换机和网桥</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#网络层用到的设备是路由器"><span class="nav-number">7.3.</span> <span class="nav-text">网络层用到的设备是路由器</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#应用层用到的设备是网关"><span class="nav-number">7.4.</span> <span class="nav-text">应用层用到的设备是网关</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#网关分类:"><span class="nav-number">7.5.</span> <span class="nav-text">网关分类:</span></a></li></ol></li></ol></div>
+            
+          </div>
+          <div class="post-toc-indicator-bottom post-toc-indicator">
+            <i class="fa fa-angle-double-down"></i>
+          </div>
+        </section>
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright" >
+  
+  &copy;  2015 - 
+  <span itemprop="copyrightYear">2017</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Mr.Zhang</span>
+</div>
+
+<div class="powered-by">
+  由 <a class="theme-link" href="http://hexo.io">Hexo</a> 强力驱动
+</div>
+
+<div class="theme-info">
+  主题 -
+  <a class="theme-link" href="https://github.com/iissnan/hexo-theme-next">
+    NexT.Mist
+  </a>
+</div>
+
+
+
+      </div>
+    </footer>
+
+    <div class="back-to-top"></div>
+  </div>
+
+  
+
+
+  
+
+
+
+  <script type="text/javascript" src="/vendors/jquery/index.js?v=2.1.3"></script>
+
+  <script type="text/javascript" src="/vendors/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+
+  <script type="text/javascript" src="/vendors/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+
+  <script type="text/javascript" src="/vendors/velocity/velocity.min.js"></script>
+
+  <script type="text/javascript" src="/vendors/velocity/velocity.ui.min.js"></script>
+
+  <script type="text/javascript" src="/vendors/fancybox/source/jquery.fancybox.pack.js"></script>
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=0.5.0"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=0.5.0"></script>
+
+
+
+  
+  
+
+  
+  
+<script type="text/javascript" src="/js/src/scrollspy.js?v=0.5.0"></script>
+
+<script type="text/javascript" id="sidebar.toc.highlight">
+  $(document).ready(function () {
+    var tocSelector = '.post-toc';
+    var $tocSelector = $(tocSelector);
+    var activeCurrentSelector = '.active-current';
+
+    $tocSelector
+      .on('activate.bs.scrollspy', function () {
+        var $currentActiveElement = $(tocSelector + ' .active').last();
+
+        removeCurrentActiveClass();
+        $currentActiveElement.addClass('active-current');
+
+        $tocSelector[0].scrollTop = $currentActiveElement.position().top;
+      })
+      .on('clear.bs.scrollspy', function () {
+        removeCurrentActiveClass();
+      });
+
+    function removeCurrentActiveClass () {
+      $(tocSelector + ' ' + activeCurrentSelector)
+        .removeClass(activeCurrentSelector.substring(1));
+    }
+
+    function processTOC () {
+      getTOCMaxHeight();
+      toggleTOCOverflowIndicators();
+    }
+
+    function getTOCMaxHeight () {
+      var height = $('.sidebar').height() -
+                   $tocSelector.position().top -
+                   $('.post-toc-indicator-bottom').height();
+
+      $tocSelector.css('height', height);
+
+      return height;
+    }
+
+    function toggleTOCOverflowIndicators () {
+      tocOverflowIndicator(
+        '.post-toc-indicator-top',
+        $tocSelector.scrollTop() > 0 ? 'show' : 'hide'
+      );
+
+      tocOverflowIndicator(
+        '.post-toc-indicator-bottom',
+        $tocSelector.scrollTop() >= $tocSelector.find('ol').height() - $tocSelector.height() ? 'hide' : 'show'
+      )
+    }
+
+    $(document).on('sidebar.motion.complete', function () {
+      processTOC();
+    });
+
+    $('body').scrollspy({ target: tocSelector });
+    $(window).on('resize', function () {
+      if ( $('.sidebar').hasClass('sidebar-active') ) {
+        processTOC();
+      }
+    });
+
+    onScroll($tocSelector);
+
+    function onScroll (element) {
+      element.on('mousewheel DOMMouseScroll', function (event) {
+          var oe = event.originalEvent;
+          var delta = oe.wheelDelta || -oe.detail;
+
+          this.scrollTop += ( delta < 0 ? 1 : -1 ) * 30;
+          event.preventDefault();
+
+          toggleTOCOverflowIndicators();
+      });
+    }
+
+    function tocOverflowIndicator (indicator, action) {
+      var $indicator = $(indicator);
+      var opacity = action === 'show' ? 1 : 0;
+      $indicator.velocity ?
+        $indicator.velocity('stop').velocity({
+          opacity: opacity
+        }, { duration: 100 }) :
+        $indicator.stop().animate({
+          opacity: opacity
+        }, 100);
+    }
+
+  });
+</script>
+
+<script type="text/javascript" id="sidebar.nav">
+  $(document).ready(function () {
+    var html = $('html');
+    var TAB_ANIMATE_DURATION = 200;
+    var hasVelocity = $.isFunction(html.velocity);
+
+    $('.sidebar-nav li').on('click', function () {
+      var item = $(this);
+      var activeTabClassName = 'sidebar-nav-active';
+      var activePanelClassName = 'sidebar-panel-active';
+      if (item.hasClass(activeTabClassName)) {
+        return;
+      }
+
+      var currentTarget = $('.' + activePanelClassName);
+      var target = $('.' + item.data('target'));
+
+      hasVelocity ?
+        currentTarget.velocity('transition.slideUpOut', TAB_ANIMATE_DURATION, function () {
+          target
+            .velocity('stop')
+            .velocity('transition.slideDownIn', TAB_ANIMATE_DURATION)
+            .addClass(activePanelClassName);
+        }) :
+        currentTarget.animate({ opacity: 0 }, TAB_ANIMATE_DURATION, function () {
+          currentTarget.hide();
+          target
+            .stop()
+            .css({'opacity': 0, 'display': 'block'})
+            .animate({ opacity: 1 }, TAB_ANIMATE_DURATION, function () {
+              currentTarget.removeClass(activePanelClassName);
+              target.addClass(activePanelClassName);
+            });
+        });
+
+      item.siblings().removeClass(activeTabClassName);
+      item.addClass(activeTabClassName);
+    });
+
+    $('.post-toc a').on('click', function (e) {
+      e.preventDefault();
+      var targetSelector = NexT.utils.escapeSelector(this.getAttribute('href'));
+      var offset = $(targetSelector).offset().top;
+      hasVelocity ?
+        html.velocity('stop').velocity('scroll', {
+          offset: offset  + 'px',
+          mobileHA: false
+        }) :
+        $('html, body').stop().animate({
+          scrollTop: offset
+        }, 500);
+    });
+
+    // Expand sidebar on post detail page by default, when post has a toc.
+    NexT.motion.middleWares.sidebar = function () {
+      var $tocContent = $('.post-toc-content');
+
+      if (CONFIG.sidebar.display === 'post' || CONFIG.sidebar.display === 'always') {
+        if ($tocContent.length > 0 && $tocContent.html().trim().length > 0) {
+          NexT.utils.displaySidebar();
+        }
+      }
+    };
+  });
+</script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=0.5.0"></script>
+
+
+
+  
+
+  
+    
+  
+
+  <script type="text/javascript">
+    var duoshuoQuery = {short_name:"zhangxiaochen"};
+    (function() {
+      var ds = document.createElement('script');
+      ds.type = 'text/javascript';ds.async = true;
+      ds.id = 'duoshuo-script';
+      ds.src = (document.location.protocol == 'https:' ? 'https:' : 'http:') + '//static.duoshuo.com/embed.js';
+      ds.charset = 'UTF-8';
+      (document.getElementsByTagName('head')[0]
+      || document.getElementsByTagName('body')[0]).appendChild(ds);
+    })();
+  </script>
+
+  
+    
+  
+
+
+
+
+
+  
+  
+
+  
+  
+
+
+</body>
+</html>
